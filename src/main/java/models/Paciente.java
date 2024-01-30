@@ -1,6 +1,5 @@
 package models;
 
-import java.time.LocalDate;
 
 public class Paciente {
 
@@ -8,13 +7,20 @@ public class Paciente {
     private String nombre;
     private String apellido;
     private String dni;
-    private LocalDate fechaIngreso;
+    private String fechaIngreso;
     private Domicilio domicilio;
 
     public Paciente() {
     }
 
-    public Paciente(String nombre, String apellido, String dni, LocalDate fechaIngreso, Domicilio domicilio) {
+    public Paciente(String nombre, String apellido, String dni, String fechaIngreso) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni = dni;
+        this.fechaIngreso = fechaIngreso;
+    }
+
+    public Paciente(String nombre, String apellido, String dni, String fechaIngreso, Domicilio domicilio) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
@@ -51,11 +57,11 @@ public class Paciente {
         this.dni = dni;
     }
 
-    public LocalDate getFechaIngreso() {
+    public String getFechaIngreso() {
         return fechaIngreso;
     }
 
-    public void setFechaIngreso(LocalDate fechaIngreso) {
+    public void setFechaIngreso(String fechaIngreso) {
         this.fechaIngreso = fechaIngreso;
     }
 
@@ -65,5 +71,17 @@ public class Paciente {
 
     public void setDomicilio(Domicilio domicilio) {
         this.domicilio = domicilio;
+    }
+
+    @Override
+    public String toString() {
+        return "Paciente{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", dni='" + dni + '\'' +
+                ", fechaIngreso='" + fechaIngreso + '\'' +
+                ", domicilio=" + domicilio +
+                '}';
     }
 }
