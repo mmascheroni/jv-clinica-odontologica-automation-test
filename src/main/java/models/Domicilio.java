@@ -44,4 +44,14 @@ public class Domicilio {
     public void setLocalidad(String localidad) {
         this.localidad = localidad;
     }
+
+    @Override
+    public String toString() {
+        return "Domicilio{" +
+                "id=" + id +
+                ", calle='" + calle + '\'' +
+                ", numero=" + numero +
+                ", localidad='" + localidad + '\'' +
+                '}';
+    }
 }
