@@ -17,9 +17,11 @@ public class LoginPage extends BasePage {
 
     private By messageBadCredentials = By.xpath("/html/body/div/form/div");
 
+
     public LoginPage(WebDriver driver, WebDriverWait wait) {
         super(driver, null);
     }
+
 
     public void navigateToLoginPage() {
         url("http://localhost:8082");
@@ -47,5 +49,11 @@ public class LoginPage extends BasePage {
 
     public Boolean messageBadCredentials() {
         return findElement(messageBadCredentials).isDisplayed();
+    }
+
+    public void login(String username, String password) {
+        sendKeys(usernameInput, username);
+        sendKeys(passwordInput, password);
+        click(buttonSignIn);
     }
 }

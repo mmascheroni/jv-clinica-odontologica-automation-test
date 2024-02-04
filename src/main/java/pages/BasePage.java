@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class BasePage {
 
@@ -35,9 +36,17 @@ public class BasePage {
         driver.quit();
     }
 
+    protected void refreshPage() {
+        driver.navigate().refresh();
+    }
+
     protected WebElement findElement(By locator) {
         wait.until(ExpectedConditions.presenceOfElementLocated(locator));
         return driver.findElement(locator);
+    }
+
+    protected WebElement findElementByXPath(String locator) {
+        return wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(locator)));
     }
 
     protected void sendKeys(By locator, String keys) {
@@ -61,4 +70,16 @@ public class BasePage {
         return findElement(locator).getText();
     }
 
+
+    protected String getValueFromTable(String locator, int row, int column) {
+        String cellINeed = locator+"/tr["+row+"]/td["+column+"]";
+
+        return findElementByXPath(cellINeed).getText();
+    }
+
+
+    protected List<WebElement> tableRows(String locator) {
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(locator+"/tr")));
+        return findElementByXPath(locator).findElements(By.tagName("tr"));
+    }
 }
