@@ -1,10 +1,12 @@
 package pages;
 
+import exceptions.MissingPropertyException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.util.List;
 
 public class OdontologoPage extends BasePage {
@@ -30,7 +32,7 @@ public class OdontologoPage extends BasePage {
     }
 
 
-    public void navigateToOdontologo(String username, String password) {
+    public void navigateToOdontologo(String username, String password) throws MissingPropertyException, IOException {
         LoginPage loginPage = new LoginPage(driver, null);
         loginPage.navigateToLoginPage();
         loginPage.login(username, password);
