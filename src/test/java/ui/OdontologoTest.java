@@ -1,5 +1,7 @@
 package ui;
 
+import config.ConfigProperties;
+import exceptions.MissingPropertyException;
 import models.Odontologo;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
@@ -8,6 +10,8 @@ import org.testng.Assert;
 
 import pages.OdontologoPage;
 
+import java.io.IOException;
+
 import static java.lang.Integer.parseInt;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -15,16 +19,26 @@ public class OdontologoTest {
 
     public WebDriver driver;
 
+    private ConfigProperties configProperties = new ConfigProperties();
+
     private Odontologo odontologo1 = new Odontologo("OdontologoUno", "testUno", "ODO001");
 
+    private String getConfigProperty(String property, String propFileName) throws IOException, MissingPropertyException {
+        configProperties.loadProperties(propFileName);
+
+        return configProperties.getProp(property);
+    }
+
     @BeforeAll
-    public void preconditions() {
+    public void preconditions() throws MissingPropertyException, IOException {
         driver = new ChromeDriver();
 
         OdontologoPage odontologoPage = new OdontologoPage(driver, null);
         odontologoPage.setup();
 
-        odontologoPage.navigateToOdontologo("admin@clinica.com", "admin");
+
+
+        odontologoPage.navigateToOdontologo(getConfigProperty("USER_ADMIN", "config"), getConfigProperty("PASSWORD_ADMIN", "config"));
     }
 
     @Test

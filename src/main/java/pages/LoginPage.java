@@ -1,8 +1,12 @@
 package pages;
 
+import config.ConfigProperties;
+import exceptions.MissingPropertyException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.io.IOException;
 
 public class LoginPage extends BasePage {
 
@@ -17,14 +21,23 @@ public class LoginPage extends BasePage {
 
     private By messageBadCredentials = By.xpath("/html/body/div/form/div");
 
+    private ConfigProperties configProperties = new ConfigProperties();
+
 
     public LoginPage(WebDriver driver, WebDriverWait wait) {
         super(driver, null);
     }
 
+    public String getConfigProperties(String property) throws IOException, MissingPropertyException {
+        configProperties.loadProperties("config");
 
-    public void navigateToLoginPage() {
-        url("http://localhost:8082");
+        return configProperties.getProp(property);
+    }
+
+
+    public void navigateToLoginPage() throws MissingPropertyException, IOException {
+        String url = getConfigProperties("BASE_URL");
+        url(url);
     }
 
     public void insertUsername(String username) {
