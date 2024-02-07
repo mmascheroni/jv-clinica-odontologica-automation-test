@@ -1,6 +1,7 @@
 package api;
 
 import controllers.PacienteControllers;
+import exceptions.MissingPropertyException;
 import models.Domicilio;
 import models.Paciente;
 import org.junit.jupiter.api.MethodOrderer;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.testng.Assert;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -30,7 +32,7 @@ public class PacienteTest {
 
     @Test
     @Order(1)
-    public void getPacientesHaveLengthEquals0() {
+    public void getPacientesHaveLengthEquals0() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
         List<Paciente> pacientes = pacienteControllers.getPacientes();
@@ -40,7 +42,7 @@ public class PacienteTest {
 
     @Test
     @Order(2)
-    public void postPacienteWithIdEquals1() {
+    public void postPacienteWithIdEquals1() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
         Paciente paciente = pacienteControllers.postPaciente(pacienteNew1);
@@ -57,7 +59,7 @@ public class PacienteTest {
 
     @Test
     @Order(3)
-    public void getPacienteWithIdEquals1() {
+    public void getPacienteWithIdEquals1() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
         Paciente paciente = pacienteControllers.getPaciente(1L);
@@ -76,7 +78,7 @@ public class PacienteTest {
 
     @Test
     @Order(4)
-    public void getPacientesHaveLengthEquals1() {
+    public void getPacientesHaveLengthEquals1() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
         List<Paciente> pacientes = pacienteControllers.getPacientes();
@@ -87,7 +89,7 @@ public class PacienteTest {
 
     @Test
     @Order(5)
-    public void postPacienteWithIdEquals2() {
+    public void postPacienteWithIdEquals2() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
         Paciente paciente = pacienteControllers.postPaciente(pacienteNew2);
@@ -105,7 +107,7 @@ public class PacienteTest {
 
     @Test
     @Order(6)
-    public void getPacienteWithIdEquals2() {
+    public void getPacienteWithIdEquals2() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
         Paciente paciente = pacienteControllers.getPaciente(2L);
@@ -124,7 +126,7 @@ public class PacienteTest {
 
     @Test
     @Order(7)
-    public void getPacientesHaveLengthEquals2() {
+    public void getPacientesHaveLengthEquals2() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
         List<Paciente> pacientes = pacienteControllers.getPacientes();
@@ -134,7 +136,7 @@ public class PacienteTest {
 
     @Test
     @Order(8)
-    public void deletePacienteWithId1() {
+    public void deletePacienteWithId1() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
         String res = pacienteControllers.deletePaciente(1L);
@@ -145,7 +147,7 @@ public class PacienteTest {
 
     @Test
     @Order(9)
-    public void getPacientesHaveLengthEquals1AfterDelete() {
+    public void getPacientesHaveLengthEquals1AfterDelete() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
         List<Paciente> pacientes = pacienteControllers.getPacientes();

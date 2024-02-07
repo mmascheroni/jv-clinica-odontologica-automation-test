@@ -3,7 +3,6 @@ package controllers;
 import config.ConfigProperties;
 import exceptions.MissingPropertyException;
 import io.restassured.RestAssured;
-import io.restassured.mapper.ObjectMapper;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 import models.Odontologo;
@@ -21,6 +20,9 @@ public class OdontologoControllers {
     public OdontologoControllers() throws MissingPropertyException, IOException {
     }
 
+//    public OdontologoControllers() throws MissingPropertyException, IOException {
+//    }
+
     private String getConfigProperty(String property, String propFileName) throws IOException, MissingPropertyException {
         configProperties.loadProperties(propFileName);
 
@@ -29,10 +31,13 @@ public class OdontologoControllers {
 
     String baseUrl = getConfigProperty("BASE_URL", "config");
 
-    String credentials = getConfigProperty("ADMIN_USER", "config");
+    String userAdmin = getConfigProperty("USER_ADMIN", "config");
+
+    String passAdmin = getConfigProperty("PASSWORD_ADMIN", "config");
+
+    String credentials = userAdmin + ":" + passAdmin;
     String base64Credentials = Base64.getEncoder().encodeToString(credentials.getBytes());
 
-    ObjectMapper objectMapper;
 
     public Odontologo getOdontologo(Long odontologoId) {
         RestAssured.defaultParser = Parser.JSON;
@@ -57,6 +62,8 @@ public class OdontologoControllers {
 
         List<Odontologo> odontologos = res.jsonPath().getList(".", Odontologo.class);
 
+        System.out.println(odontologos);
+
 
         return odontologos;
     }
@@ -70,8 +77,12 @@ public class OdontologoControllers {
                 .body(odontologo)
                 .post(baseUrl + "/odontologos/registrar");
 
+        System.out.println("Request: " + odontologo);
+
 
         Odontologo odontologoRes = res.as(Odontologo.class);
+
+        System.out.println("RESPUESTA: " + odontologoRes);
 
         return odontologoRes;
     }
