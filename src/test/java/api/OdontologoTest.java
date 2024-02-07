@@ -15,9 +15,9 @@ import java.util.List;
 @TestMethodOrder(OrderAnnotation.class)
 public class OdontologoTest {
 
-    Odontologo odontologoNew1 = new Odontologo("Mauro", "Mascheroni", "O001");
+    Odontologo odontologoNew1 = new Odontologo("OdontologoUno", "OdontologoDos", "O001");
 
-    Odontologo odontologoNew2 = new Odontologo("OdontologoName", "Test2", "O002");
+    Odontologo odontologoNew2 = new Odontologo("OdontologoDos", "TestDos", "O002");
 
     // TESTS WITH USER ADMIN
 
@@ -29,6 +29,7 @@ public class OdontologoTest {
 
         List<Odontologo> odontologos = odontologoControllers.getOdontologos();
 
+        System.out.println(odontologos);
 
         Assert.assertTrue( odontologos.isEmpty(), "La lista de odontólogos no está vacía");
     }
@@ -40,6 +41,8 @@ public class OdontologoTest {
         OdontologoControllers odontologoControllers = new OdontologoControllers();
 
         Odontologo odontologo = odontologoControllers.postOdontologo(odontologoNew1);
+
+        System.out.println(odontologo);
 
         Assert.assertEquals( odontologo.getId(), 1);
         Assert.assertEquals( odontologo.getNombre(), odontologoNew1.getNombre());

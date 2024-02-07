@@ -1,10 +1,13 @@
 package controllers;
 
+import config.ConfigProperties;
+import exceptions.MissingPropertyException;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 import models.Paciente;
 
+import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
@@ -12,7 +15,24 @@ import static io.restassured.RestAssured.given;
 
 public class PacienteControllers {
 
-    String credentials = "admin@clinica.com:admin";
+    private ConfigProperties configProperties = new ConfigProperties();
+
+    public PacienteControllers() throws MissingPropertyException, IOException {
+    }
+
+    private String getConfigProperty(String property, String propFileName) throws IOException, MissingPropertyException {
+        configProperties.loadProperties(propFileName);
+
+        return configProperties.getProp(property);
+    }
+
+    String baseUrl = getConfigProperty("BASE_URL", "config");
+
+    String userAdmin = getConfigProperty("USER_ADMIN", "config");
+
+    String passAdmin = getConfigProperty("PASSWORD_ADMIN", "config");
+
+    String credentials = userAdmin + ":" + passAdmin;
     String base64Credentials = Base64.getEncoder().encodeToString(credentials.getBytes());
 
 
@@ -21,7 +41,7 @@ public class PacienteControllers {
 
         Response res = given()
                 .header("Authorization", "Basic " + base64Credentials)
-                .get("http://localhost:8082/pacientes/" + pacienteId);
+                .get(baseUrl + "/pacientes/" + pacienteId);
 
         Paciente paciente = res.as(Paciente.class);
 
@@ -33,7 +53,7 @@ public class PacienteControllers {
 
         Response res = given()
                 .header("Authorization", "Basic " + base64Credentials)
-                .get("http://localhost:8082/pacientes/");
+                .get(baseUrl + "/pacientes/");
 
         List<Paciente> pacientes = res.jsonPath().getList(".", Paciente.class);
 
@@ -47,7 +67,7 @@ public class PacienteControllers {
                 .header("Authorization", "Basic " + base64Credentials)
                 .contentType("application/json")
                 .body(paciente)
-                .post("http://localhost:8082/pacientes/registrar");
+                .post(baseUrl + "/pacientes/registrar");
 
         Paciente pacienteCreated = res.as(Paciente.class);
 
@@ -59,7 +79,7 @@ public class PacienteControllers {
 
         Response res = given()
                 .header("Authorization", "Basic " + base64Credentials)
-                .delete("http://localhost:8082/pacientes/eliminar/" + pacienteId);
+                .delete(baseUrl + "/pacientes/eliminar/" + pacienteId);
 
         return res.prettyPrint();
     }
