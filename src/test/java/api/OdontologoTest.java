@@ -1,7 +1,10 @@
 package api;
 
+import config.ConfigProperties;
+import config.UserCredentialsConfig;
 import controllers.OdontologoControllers;
 import exceptions.MissingPropertyException;
+import io.restassured.response.Response;
 import models.Odontologo;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -10,26 +13,37 @@ import org.testng.Assert;
 import static org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class OdontologoTest {
 
+    private ConfigProperties configProperties = new ConfigProperties();
+
+    private UserCredentialsConfig userCredentialsConfig = new UserCredentialsConfig(configProperties);
+
+    private String base64CredentialsAdmin = userCredentialsConfig.getUserBase64Credentials("USER_ADMIN", "PASSWORD_ADMIN", "config");
+
+    private String base64CredentialsUser = userCredentialsConfig.getUserBase64Credentials("USER", "PASSWORD_USER", "config");
+
     Odontologo odontologoNew1 = new Odontologo("OdontologoUno", "OdontologoDos", "O001");
 
     Odontologo odontologoNew2 = new Odontologo("OdontologoDos", "TestDos", "O002");
 
-    // TESTS WITH USER ADMIN
+    public OdontologoTest() throws MissingPropertyException, IOException {
+    }
 
+    // TESTS WITH USER ADMIN
     @Test()
     @Order(1)
     public void getOdontologosIsEmpty() throws MissingPropertyException, IOException {
 
         OdontologoControllers odontologoControllers = new OdontologoControllers();
 
-        List<Odontologo> odontologos = odontologoControllers.getOdontologos();
+        Response res = odontologoControllers.getOdontologos(base64CredentialsAdmin);
 
-        System.out.println(odontologos);
+        List<Odontologo> odontologos = res.jsonPath().getList(".", Odontologo.class);
 
         Assert.assertTrue( odontologos.isEmpty(), "La lista de odontólogos no está vacía");
     }
@@ -40,17 +54,14 @@ public class OdontologoTest {
 
         OdontologoControllers odontologoControllers = new OdontologoControllers();
 
-        Odontologo odontologo = odontologoControllers.postOdontologo(odontologoNew1);
+        Response res = odontologoControllers.postOdontologo(odontologoNew1, base64CredentialsAdmin);
 
-        System.out.println(odontologo);
+        Odontologo odontologo = res.as(Odontologo.class);
 
         Assert.assertEquals( odontologo.getId(), 1);
         Assert.assertEquals( odontologo.getNombre(), odontologoNew1.getNombre());
         Assert.assertEquals( odontologo.getApellido(), odontologoNew1.getApellido());
         Assert.assertEquals( odontologo.getMatricula(), odontologoNew1.getMatricula());
-
-//        Odontologo getOdontologoCreated = odontologoControllers.getOdontologo(3L);
-//        Assert.assertEquals( getOdontologoCreated.getNombre(), odontologoNew.getNombre());
     }
 
 
@@ -60,9 +71,9 @@ public class OdontologoTest {
 
         OdontologoControllers odontologoControllers = new OdontologoControllers();
 
-        Odontologo odontologo = odontologoControllers.getOdontologo(1L);
+        Response res = odontologoControllers.getOdontologo(1L, base64CredentialsAdmin);
 
-        System.out.println(odontologo);
+        Odontologo odontologo = res.as(Odontologo.class);
 
         Assert.assertEquals(odontologo.getId(), 1);
         Assert.assertEquals(odontologo.getNombre(), odontologoNew1.getNombre());
@@ -77,7 +88,9 @@ public class OdontologoTest {
 
         OdontologoControllers odontologoControllers = new OdontologoControllers();
 
-        List<Odontologo> odontologos = odontologoControllers.getOdontologos();
+        Response res = odontologoControllers.getOdontologos(base64CredentialsAdmin);
+
+        List<Odontologo> odontologos = res.jsonPath().getList(".", Odontologo.class);
 
         Assert.assertEquals( odontologos.size(), 1);
     }
@@ -88,7 +101,9 @@ public class OdontologoTest {
 
         OdontologoControllers odontologoControllers = new OdontologoControllers();
 
-        Odontologo odontologo = odontologoControllers.postOdontologo(odontologoNew2);
+        Response res = odontologoControllers.postOdontologo(odontologoNew2, base64CredentialsAdmin);
+
+        Odontologo odontologo = res.as(Odontologo.class);
 
         Assert.assertEquals( odontologo.getId(), 2);
         Assert.assertEquals( odontologo.getNombre(), odontologoNew2.getNombre());
@@ -106,7 +121,9 @@ public class OdontologoTest {
 
         OdontologoControllers odontologoControllers = new OdontologoControllers();
 
-        List<Odontologo> odontologos = odontologoControllers.getOdontologos();
+        Response res = odontologoControllers.getOdontologos(base64CredentialsAdmin);
+
+        List<Odontologo> odontologos = res.jsonPath().getList(".", Odontologo.class);
 
         Assert.assertEquals( odontologos.size(), 2);
     }
@@ -117,9 +134,9 @@ public class OdontologoTest {
 
         OdontologoControllers odontologoControllers = new OdontologoControllers();
 
-        String res = odontologoControllers.deleteOdontologoById(1L);
+        Response res = odontologoControllers.deleteOdontologoById(1L, base64CredentialsAdmin);
 
-        Assert.assertEquals( res, "Odontologo eliminado");
+        Assert.assertEquals( res.prettyPrint(), "Odontologo eliminado");
     }
 
     @Test
@@ -128,8 +145,22 @@ public class OdontologoTest {
 
         OdontologoControllers odontologoControllers = new OdontologoControllers();
 
-        List<Odontologo> odontologos = odontologoControllers.getOdontologos();
+        Response res = odontologoControllers.getOdontologos(base64CredentialsAdmin);
+
+        List<Odontologo> odontologos = res.jsonPath().getList(".", Odontologo.class);
 
         Assert.assertEquals( odontologos.size(), 1);
+    }
+
+
+    // TESTS WITH USER
+    @Test
+    @Order(9)
+    public void shouldNotPostToOdontologo() throws MissingPropertyException, IOException {
+        OdontologoControllers odontologoControllers = new OdontologoControllers();
+
+        Response res = odontologoControllers.postOdontologo(odontologoNew2, base64CredentialsUser);
+
+        Assert.assertEquals(res.getStatusCode(), 403);
     }
 }
