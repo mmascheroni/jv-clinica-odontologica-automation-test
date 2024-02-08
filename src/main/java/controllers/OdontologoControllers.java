@@ -8,7 +8,6 @@ import io.restassured.response.Response;
 import models.Odontologo;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -20,9 +19,6 @@ public class OdontologoControllers {
     public OdontologoControllers() throws MissingPropertyException, IOException {
     }
 
-//    public OdontologoControllers() throws MissingPropertyException, IOException {
-//    }
-
     private String getConfigProperty(String property, String propFileName) throws IOException, MissingPropertyException {
         configProperties.loadProperties(propFileName);
 
@@ -31,73 +27,52 @@ public class OdontologoControllers {
 
     String baseUrl = getConfigProperty("BASE_URL", "config");
 
-    String userAdmin = getConfigProperty("USER_ADMIN", "config");
 
-    String passAdmin = getConfigProperty("PASSWORD_ADMIN", "config");
-
-    String credentials = userAdmin + ":" + passAdmin;
-    String base64Credentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-
-
-    public Odontologo getOdontologo(Long odontologoId) {
+    // ADMIN
+    public Response getOdontologo(Long odontologoId, String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
         Response res = given()
-                .header("Authorization", "Basic " + base64Credentials)
+                .header("Authorization", "Basic " + credentials)
                 .get(baseUrl + "/odontologos/" + odontologoId);
 
-        Odontologo odontologo = res.as(Odontologo.class);
 
-        return odontologo;
+        return res;
     }
 
 
-    public List<Odontologo> getOdontologos() {
+    public Response getOdontologos(String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
         Response res = given()
-                .header("Authorization", "Basic " + base64Credentials)
+                .header("Authorization", "Basic " + credentials)
                 .get(baseUrl + "/odontologos/");
 
-
-        List<Odontologo> odontologos = res.jsonPath().getList(".", Odontologo.class);
-
-        System.out.println(odontologos);
-
-
-        return odontologos;
+        return res;
     }
 
-    public Odontologo postOdontologo(Odontologo odontologo) {
+    public Response postOdontologo(Odontologo odontologo, String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
         Response res = given()
-                .header("Authorization", "Basic " + base64Credentials)
+                .header("Authorization", "Basic " + credentials)
                 .contentType("application/json")
                 .body(odontologo)
                 .post(baseUrl + "/odontologos/registrar");
 
-        System.out.println("Request: " + odontologo);
 
-
-        Odontologo odontologoRes = res.as(Odontologo.class);
-
-        System.out.println("RESPUESTA: " + odontologoRes);
-
-        return odontologoRes;
+        return res;
     }
 
-
-
-    public String deleteOdontologoById(Long odontologoId) {
+    public Response deleteOdontologoById(Long odontologoId, String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
         Response res = given()
-                .header("Authorization", "Basic " + base64Credentials)
+                .header("Authorization", "Basic " + credentials)
                 .delete(baseUrl + "/odontologos/eliminar/" + odontologoId);
 
-
-
-        return res.prettyPrint();
+        return res;
     }
+
+
 }
