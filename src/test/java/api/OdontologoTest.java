@@ -4,6 +4,8 @@ import config.ConfigProperties;
 import config.UserCredentialsConfig;
 import controllers.OdontologoControllers;
 import exceptions.MissingPropertyException;
+import groovy.xml.StreamingDOMBuilder;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import models.Odontologo;
 import org.junit.jupiter.api.Order;
@@ -13,7 +15,6 @@ import org.testng.Assert;
 import static org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 @TestMethodOrder(OrderAnnotation.class)
@@ -30,6 +31,12 @@ public class OdontologoTest {
     Odontologo odontologoNew1 = new Odontologo("OdontologoUno", "OdontologoDos", "O001");
 
     Odontologo odontologoNew2 = new Odontologo("OdontologoDos", "TestDos", "O002");
+
+    Odontologo odontologoWithoutName = new Odontologo("", "TestTres", "O003");
+
+    Odontologo odontologoWithoutLastName = new Odontologo("OdontologoCuatro", "", "O004");
+
+    Odontologo odontologoWithoutMatricula = new Odontologo("OdontologoCinco", "TestCinco", "");
 
     public OdontologoTest() throws MissingPropertyException, IOException {
     }
@@ -109,9 +116,6 @@ public class OdontologoTest {
         Assert.assertEquals( odontologo.getNombre(), odontologoNew2.getNombre());
         Assert.assertEquals( odontologo.getApellido(), odontologoNew2.getApellido());
         Assert.assertEquals( odontologo.getMatricula(), odontologoNew2.getMatricula());
-
-//        Odontologo getOdontologoCreated = odontologoControllers.getOdontologo(3L);
-//        Assert.assertEquals( getOdontologoCreated.getNombre(), odontologoNew.getNombre());
     }
 
 
@@ -162,5 +166,83 @@ public class OdontologoTest {
         Response res = odontologoControllers.postOdontologo(odontologoNew2, base64CredentialsUser);
 
         Assert.assertEquals(res.getStatusCode(), 403);
+    }
+
+    @Test
+    @Order(10)
+    public void shouldNotGetOdontologos() throws MissingPropertyException, IOException {
+        OdontologoControllers odontologoControllers = new OdontologoControllers();
+
+        Response res = odontologoControllers.getOdontologos(base64CredentialsUser);
+
+        Assert.assertEquals(res.getStatusCode(), 403);
+    }
+
+    @Test
+    @Order(11)
+    public void shouldNotGetOdontologo() throws MissingPropertyException, IOException {
+        OdontologoControllers odontologoControllers = new OdontologoControllers();
+
+        Response res = odontologoControllers.getOdontologo(1L, base64CredentialsUser);
+
+        Assert.assertEquals(res.getStatusCode(), 403);
+    }
+
+    @Test
+    @Order(12)
+    public void shouldNotDeleteOdontologo() throws MissingPropertyException, IOException {
+        OdontologoControllers odontologoControllers = new OdontologoControllers();
+
+        Response res = odontologoControllers.deleteOdontologoById(1L, base64CredentialsUser);
+
+        Assert.assertEquals(res.getStatusCode(), 403);
+    }
+
+
+    // TEST WITHOUT DATA ON BODY
+    @Test
+    @Order(13)
+    public void shouldMessageNameEmptyToPostOdontologo() throws MissingPropertyException, IOException {
+        OdontologoControllers odontologoControllers = new OdontologoControllers();
+
+        Response res = odontologoControllers.postOdontologo(odontologoWithoutName, base64CredentialsAdmin);
+
+        String resBody = res.getBody().asString();
+
+        JsonPath jsonPathRes = new JsonPath(resBody);
+        String messageError = jsonPathRes.getString("nombre");
+
+        Assert.assertEquals(messageError, "Debe especificarse el nombre del odontologo, no puede quedar vacio");
+    }
+
+
+    @Test
+    @Order(14)
+    public void shouldMessageLastNameEmptyToPostOdontologo() throws MissingPropertyException, IOException {
+        OdontologoControllers odontologoControllers = new OdontologoControllers();
+
+        Response res = odontologoControllers.postOdontologo(odontologoWithoutLastName, base64CredentialsAdmin);
+
+        String resBody = res.getBody().asString();
+
+        JsonPath jsonPathRes = new JsonPath(resBody);
+        String messageError = jsonPathRes.getString("apellido");
+
+        Assert.assertEquals(messageError, "Debe especificarse el apellido del odontologo, no puede quedar vacio");
+    }
+
+    @Test
+    @Order(15)
+    public void shouldMessageMatriculaEmptyToPostOdontologo() throws MissingPropertyException, IOException {
+        OdontologoControllers odontologoControllers = new OdontologoControllers();
+
+        Response res = odontologoControllers.postOdontologo(odontologoWithoutMatricula, base64CredentialsAdmin);
+
+        String resBody = res.getBody().asString();
+
+        JsonPath jsonPathRes = new JsonPath(resBody);
+        String messageError = jsonPathRes.getString("matricula");
+
+        Assert.assertEquals(messageError, "Debe especificarse la matricula del odontologo, no puede quedar vacia");
     }
 }
