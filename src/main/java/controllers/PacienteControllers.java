@@ -28,59 +28,47 @@ public class PacienteControllers {
 
     String baseUrl = getConfigProperty("BASE_URL", "config");
 
-    String userAdmin = getConfigProperty("USER_ADMIN", "config");
-
-    String passAdmin = getConfigProperty("PASSWORD_ADMIN", "config");
-
-    String credentials = userAdmin + ":" + passAdmin;
-    String base64Credentials = Base64.getEncoder().encodeToString(credentials.getBytes());
 
 
-    public Paciente getPaciente(Long pacienteId) {
+    public Response getPaciente(Long pacienteId, String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
         Response res = given()
-                .header("Authorization", "Basic " + base64Credentials)
+                .header("Authorization", "Basic " + credentials)
                 .get(baseUrl + "/pacientes/" + pacienteId);
 
-        Paciente paciente = res.as(Paciente.class);
-
-        return paciente;
+        return res;
     }
 
-    public List<Paciente> getPacientes() {
+    public Response getPacientes(String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
         Response res = given()
-                .header("Authorization", "Basic " + base64Credentials)
+                .header("Authorization", "Basic " + credentials)
                 .get(baseUrl + "/pacientes/");
 
-        List<Paciente> pacientes = res.jsonPath().getList(".", Paciente.class);
-
-        return pacientes;
+        return res;
     }
 
-    public Paciente postPaciente(Paciente paciente) {
+    public Response postPaciente(Paciente paciente, String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
         Response res = given()
-                .header("Authorization", "Basic " + base64Credentials)
+                .header("Authorization", "Basic " + credentials)
                 .contentType("application/json")
                 .body(paciente)
                 .post(baseUrl + "/pacientes/registrar");
 
-        Paciente pacienteCreated = res.as(Paciente.class);
-
-        return pacienteCreated;
+        return res;
     }
 
-    public String deletePaciente(Long pacienteId) {
+    public Response deletePaciente(Long pacienteId, String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
         Response res = given()
-                .header("Authorization", "Basic " + base64Credentials)
+                .header("Authorization", "Basic " + credentials)
                 .delete(baseUrl + "/pacientes/eliminar/" + pacienteId);
 
-        return res.prettyPrint();
+        return res;
     }
 }
