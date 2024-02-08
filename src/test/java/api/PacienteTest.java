@@ -1,7 +1,10 @@
 package api;
 
+import config.ConfigProperties;
+import config.UserCredentialsConfig;
 import controllers.PacienteControllers;
 import exceptions.MissingPropertyException;
+import io.restassured.response.Response;
 import models.Domicilio;
 import models.Paciente;
 import org.junit.jupiter.api.MethodOrderer;
@@ -18,6 +21,14 @@ import java.util.List;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PacienteTest {
 
+    private ConfigProperties configProperties = new ConfigProperties();
+
+    private UserCredentialsConfig userCredentialsConfig = new UserCredentialsConfig(configProperties);
+
+    private String base64CredentialsAdmin = userCredentialsConfig.getUserBase64Credentials("USER_ADMIN", "PASSWORD_ADMIN", "config");
+
+    private String base64CredentialsUser = userCredentialsConfig.getUserBase64Credentials("USER", "PASSWORD_USER", "config");
+
     LocalDate localDate = LocalDate.now();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     String fechaIngresoString = localDate.format(formatter);
@@ -29,13 +40,18 @@ public class PacienteTest {
     Paciente pacienteNew1 = new Paciente("Paciente1", "Test1", "12345678", fechaIngresoString, domicilio1);
     Paciente pacienteNew2 = new Paciente("Paciente2", "Test2", "123456789", fechaIngresoString, domicilio2);
 
+    public PacienteTest() throws MissingPropertyException, IOException {
+    }
+
 
     @Test
     @Order(1)
     public void getPacientesHaveLengthEquals0() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
-        List<Paciente> pacientes = pacienteControllers.getPacientes();
+        Response res = pacienteControllers.getPacientes(base64CredentialsAdmin);
+
+        List<Paciente> pacientes = res.jsonPath().getList(".", Paciente.class);
 
         Assert.assertTrue(pacientes.isEmpty(), "La lista de pacientes no está vacía");
     }
@@ -45,7 +61,9 @@ public class PacienteTest {
     public void postPacienteWithIdEquals1() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
-        Paciente paciente = pacienteControllers.postPaciente(pacienteNew1);
+        Response res = pacienteControllers.postPaciente(pacienteNew1, base64CredentialsAdmin);
+
+        Paciente paciente = res.as(Paciente.class);
 
         Assert.assertEquals( paciente.getId(), 1);
         Assert.assertEquals( paciente.getNombre(), pacienteNew1.getNombre());
@@ -62,8 +80,9 @@ public class PacienteTest {
     public void getPacienteWithIdEquals1() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
-        Paciente paciente = pacienteControllers.getPaciente(1L);
+        Response res = pacienteControllers.getPaciente(1L, base64CredentialsAdmin);
 
+        Paciente paciente = res.as(Paciente.class);
 
         Assert.assertEquals(paciente.getId(), 1);
         Assert.assertEquals( paciente.getNombre(), pacienteNew1.getNombre());
@@ -81,7 +100,9 @@ public class PacienteTest {
     public void getPacientesHaveLengthEquals1() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
-        List<Paciente> pacientes = pacienteControllers.getPacientes();
+        Response res = pacienteControllers.getPacientes(base64CredentialsAdmin);
+
+        List<Paciente> pacientes = res.jsonPath().getList(".", Paciente.class);
 
         Assert.assertEquals(pacientes.size(), 1);
     }
@@ -92,7 +113,9 @@ public class PacienteTest {
     public void postPacienteWithIdEquals2() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
-        Paciente paciente = pacienteControllers.postPaciente(pacienteNew2);
+        Response res = pacienteControllers.postPaciente(pacienteNew2, base64CredentialsAdmin);
+
+        Paciente paciente = res.as(Paciente.class);
 
         Assert.assertEquals( paciente.getId(), 2);
         Assert.assertEquals( paciente.getNombre(), pacienteNew2.getNombre());
@@ -110,8 +133,9 @@ public class PacienteTest {
     public void getPacienteWithIdEquals2() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
-        Paciente paciente = pacienteControllers.getPaciente(2L);
+        Response res = pacienteControllers.getPaciente(2L, base64CredentialsAdmin);
 
+        Paciente paciente = res.as(Paciente.class);
 
         Assert.assertEquals(paciente.getId(), 2);
         Assert.assertEquals( paciente.getNombre(), pacienteNew2.getNombre());
@@ -129,7 +153,9 @@ public class PacienteTest {
     public void getPacientesHaveLengthEquals2() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
-        List<Paciente> pacientes = pacienteControllers.getPacientes();
+        Response res = pacienteControllers.getPacientes(base64CredentialsAdmin);
+
+        List<Paciente> pacientes = res.jsonPath().getList(".", Paciente.class);
 
         Assert.assertEquals(pacientes.size(), 2);
     }
@@ -139,9 +165,9 @@ public class PacienteTest {
     public void deletePacienteWithId1() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
-        String res = pacienteControllers.deletePaciente(1L);
+        Response res = pacienteControllers.deletePaciente(1L, base64CredentialsAdmin);
 
-        Assert.assertEquals(res, "Paciente eliminado");
+        Assert.assertEquals(res.prettyPrint(), "Paciente eliminado");
     }
 
 
@@ -150,7 +176,9 @@ public class PacienteTest {
     public void getPacientesHaveLengthEquals1AfterDelete() throws MissingPropertyException, IOException {
         PacienteControllers pacienteControllers = new PacienteControllers();
 
-        List<Paciente> pacientes = pacienteControllers.getPacientes();
+        Response res = pacienteControllers.getPacientes(base64CredentialsAdmin);
+
+        List<Paciente> pacientes = res.jsonPath().getList(".", Paciente.class);
 
         Assert.assertEquals(pacientes.size(), 1);
     }
