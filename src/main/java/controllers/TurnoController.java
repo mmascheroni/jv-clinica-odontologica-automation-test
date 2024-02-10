@@ -4,10 +4,12 @@ import config.ConfigProperties;
 import exceptions.MissingPropertyException;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import models.Odontologo;
 import models.Paciente;
 import models.Turno;
+import org.json.simple.JSONObject;
 
 import java.io.IOException;
 
@@ -43,19 +45,33 @@ public class TurnoController {
 
         Response res = given()
                 .header("Authorization", "Basic " + credentials)
-                .get(baseUrl + "/odontologos/" + turnoId);
+                .get(baseUrl + "/turnos/" + turnoId);
 
 
         return res;
     }
 
-    public Response postTurno(Turno turno, Odontologo odontologo, Paciente paciente, String credentials) {
+    public Response postTurno(Turno turno, String credentials) {
         RestAssured.defaultParser = Parser.JSON;
+
+//
+//        JSONObject jsonTurno = new JSONObject();
+//        JSONObject paciente = new JSONObject();
+//        paciente.put("id", turno.getPaciente().getId());
+//        jsonTurno.put("paciente", paciente);
+//
+//        JSONObject odontologo = new JSONObject();
+//        odontologo.put("id", turno.getOdontologo().getId());
+//        jsonTurno.put("odontologo", odontologo);
+//
+//        jsonTurno.put("fechaYHora", turno.getFechaYHora());
+
 
         Response res = given()
                 .header("Authorization", "Basic " + credentials)
-                .get(baseUrl + "/odontologos/registrar");
-
+                .contentType("application/json")
+                .body(turno)
+                .post(baseUrl + "/turnos/registrar");
 
         return res;
     }
@@ -65,7 +81,7 @@ public class TurnoController {
 
         Response res = given()
                 .header("Authorization", "Basic " + credentials)
-                .get(baseUrl + "/turnos/" + turnoId);
+                .delete(baseUrl + "/turnos/" + turnoId);
 
 
         return res;

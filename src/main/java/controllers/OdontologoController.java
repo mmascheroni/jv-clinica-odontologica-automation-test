@@ -27,7 +27,6 @@ public class OdontologoController {
     String baseUrl = getConfigProperty("BASE_URL", "config");
 
 
-    // ADMIN
     public Response getOdontologo(Long odontologoId, String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
@@ -74,4 +73,15 @@ public class OdontologoController {
     }
 
 
+    public Odontologo odontologo(Long odontologoId, String credentials) {
+        RestAssured.defaultParser = Parser.JSON;
+
+        Response res = given()
+                .header("Authorization", "Basic " + credentials)
+                .get(baseUrl + "/odontologos/" + odontologoId);
+
+        Odontologo odontologo = res.as(Odontologo.class);
+
+        return odontologo;
+    }
 }

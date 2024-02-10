@@ -70,4 +70,17 @@ public class PacienteController {
 
         return res;
     }
+
+
+    public Paciente paciente(Long pacienteId, String credentials) {
+        RestAssured.defaultParser = Parser.JSON;
+
+        Response res = given()
+                .header("Authorization", "Basic " + credentials)
+                .get(baseUrl + "/pacientes/" + pacienteId);
+
+        Paciente paciente = res.as(Paciente.class);
+
+        return paciente;
+    }
 }

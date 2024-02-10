@@ -1,12 +1,17 @@
 package models;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Turno {
 
     private Long id;
+
     private Paciente paciente;
     private Odontologo odontologo;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private String fechaYHora;
 
     public Turno() {
@@ -16,6 +21,10 @@ public class Turno {
         this.paciente = paciente;
         this.odontologo = odontologo;
         this.fechaYHora = fechaYHora;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getId() {
