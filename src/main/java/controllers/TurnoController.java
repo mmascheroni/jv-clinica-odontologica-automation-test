@@ -5,19 +5,19 @@ import exceptions.MissingPropertyException;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
+import models.Odontologo;
 import models.Paciente;
+import models.Turno;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class PacienteControllers {
+public class TurnoController {
 
     private ConfigProperties configProperties = new ConfigProperties();
 
-    public PacienteControllers() throws MissingPropertyException, IOException {
+    public TurnoController() throws MissingPropertyException, IOException {
     }
 
     private String getConfigProperty(String property, String propFileName) throws IOException, MissingPropertyException {
@@ -28,46 +28,45 @@ public class PacienteControllers {
 
     String baseUrl = getConfigProperty("BASE_URL", "config");
 
-
-
-    public Response getPaciente(Long pacienteId, String credentials) {
+    public Response getTurnos(String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
         Response res = given()
                 .header("Authorization", "Basic " + credentials)
-                .get(baseUrl + "/pacientes/" + pacienteId);
+                .get(baseUrl + "/turnos/");
 
         return res;
     }
 
-    public Response getPacientes(String credentials) {
+    public Response getTurno(Long turnoId, String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
         Response res = given()
                 .header("Authorization", "Basic " + credentials)
-                .get(baseUrl + "/pacientes/");
+                .get(baseUrl + "/odontologos/" + turnoId);
+
 
         return res;
     }
 
-    public Response postPaciente(Paciente paciente, String credentials) {
+    public Response postTurno(Turno turno, Odontologo odontologo, Paciente paciente, String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
         Response res = given()
                 .header("Authorization", "Basic " + credentials)
-                .contentType("application/json")
-                .body(paciente)
-                .post(baseUrl + "/pacientes/registrar");
+                .get(baseUrl + "/odontologos/registrar");
+
 
         return res;
     }
 
-    public Response deletePaciente(Long pacienteId, String credentials) {
+    public Response deleteTurno(Long turnoId, String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
         Response res = given()
                 .header("Authorization", "Basic " + credentials)
-                .delete(baseUrl + "/pacientes/eliminar/" + pacienteId);
+                .get(baseUrl + "/turnos/" + turnoId);
+
 
         return res;
     }
