@@ -2,9 +2,8 @@ package api;
 
 import config.ConfigProperties;
 import config.UserCredentialsConfig;
-import controllers.OdontologoControllers;
+import controllers.OdontologoController;
 import exceptions.MissingPropertyException;
-import groovy.xml.StreamingDOMBuilder;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import models.Odontologo;
@@ -46,9 +45,9 @@ public class OdontologoTest {
     @Order(1)
     public void getOdontologosIsEmpty() throws MissingPropertyException, IOException {
 
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.getOdontologos(base64CredentialsAdmin);
+        Response res = odontologoController.getOdontologos(base64CredentialsAdmin);
 
         List<Odontologo> odontologos = res.jsonPath().getList(".", Odontologo.class);
 
@@ -59,9 +58,9 @@ public class OdontologoTest {
     @Order(2)
     public void postOdontologoWithId1() throws MissingPropertyException, IOException {
 
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.postOdontologo(odontologoNew1, base64CredentialsAdmin);
+        Response res = odontologoController.postOdontologo(odontologoNew1, base64CredentialsAdmin);
 
         Odontologo odontologo = res.as(Odontologo.class);
 
@@ -76,9 +75,9 @@ public class OdontologoTest {
     @Order(3)
     public void getOdontologoByIdEquals1() throws MissingPropertyException, IOException {
 
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.getOdontologo(1L, base64CredentialsAdmin);
+        Response res = odontologoController.getOdontologo(1L, base64CredentialsAdmin);
 
         Odontologo odontologo = res.as(Odontologo.class);
 
@@ -93,9 +92,9 @@ public class OdontologoTest {
     @Order(4)
     public void getOdontologosHaveLengthEquals1() throws MissingPropertyException, IOException {
 
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.getOdontologos(base64CredentialsAdmin);
+        Response res = odontologoController.getOdontologos(base64CredentialsAdmin);
 
         List<Odontologo> odontologos = res.jsonPath().getList(".", Odontologo.class);
 
@@ -106,9 +105,9 @@ public class OdontologoTest {
     @Order(5)
     public void postOdontologoWithId2() throws MissingPropertyException, IOException {
 
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.postOdontologo(odontologoNew2, base64CredentialsAdmin);
+        Response res = odontologoController.postOdontologo(odontologoNew2, base64CredentialsAdmin);
 
         Odontologo odontologo = res.as(Odontologo.class);
 
@@ -123,9 +122,9 @@ public class OdontologoTest {
     @Order(6)
     public void getOdontologosHaveLengthEquals2() throws MissingPropertyException, IOException {
 
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.getOdontologos(base64CredentialsAdmin);
+        Response res = odontologoController.getOdontologos(base64CredentialsAdmin);
 
         List<Odontologo> odontologos = res.jsonPath().getList(".", Odontologo.class);
 
@@ -136,9 +135,9 @@ public class OdontologoTest {
     @Order(7)
     public void deleteOdontologoWithId1() throws MissingPropertyException, IOException {
 
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.deleteOdontologoById(1L, base64CredentialsAdmin);
+        Response res = odontologoController.deleteOdontologoById(1L, base64CredentialsAdmin);
 
         Assert.assertEquals( res.prettyPrint(), "Odontologo eliminado");
     }
@@ -147,9 +146,9 @@ public class OdontologoTest {
     @Order(8)
     public void getOdontologosHaveLengthEquals1AfterDelete() throws MissingPropertyException, IOException {
 
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.getOdontologos(base64CredentialsAdmin);
+        Response res = odontologoController.getOdontologos(base64CredentialsAdmin);
 
         List<Odontologo> odontologos = res.jsonPath().getList(".", Odontologo.class);
 
@@ -161,9 +160,9 @@ public class OdontologoTest {
     @Test
     @Order(9)
     public void shouldNotPostToOdontologo() throws MissingPropertyException, IOException {
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.postOdontologo(odontologoNew2, base64CredentialsUser);
+        Response res = odontologoController.postOdontologo(odontologoNew2, base64CredentialsUser);
 
         Assert.assertEquals(res.getStatusCode(), 403);
     }
@@ -171,9 +170,9 @@ public class OdontologoTest {
     @Test
     @Order(10)
     public void shouldNotGetOdontologos() throws MissingPropertyException, IOException {
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.getOdontologos(base64CredentialsUser);
+        Response res = odontologoController.getOdontologos(base64CredentialsUser);
 
         Assert.assertEquals(res.getStatusCode(), 403);
     }
@@ -181,9 +180,9 @@ public class OdontologoTest {
     @Test
     @Order(11)
     public void shouldNotGetOdontologo() throws MissingPropertyException, IOException {
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.getOdontologo(1L, base64CredentialsUser);
+        Response res = odontologoController.getOdontologo(1L, base64CredentialsUser);
 
         Assert.assertEquals(res.getStatusCode(), 403);
     }
@@ -191,9 +190,9 @@ public class OdontologoTest {
     @Test
     @Order(12)
     public void shouldNotDeleteOdontologo() throws MissingPropertyException, IOException {
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.deleteOdontologoById(1L, base64CredentialsUser);
+        Response res = odontologoController.deleteOdontologoById(1L, base64CredentialsUser);
 
         Assert.assertEquals(res.getStatusCode(), 403);
     }
@@ -203,9 +202,9 @@ public class OdontologoTest {
     @Test
     @Order(13)
     public void shouldMessageNameEmptyToPostOdontologo() throws MissingPropertyException, IOException {
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.postOdontologo(odontologoWithoutName, base64CredentialsAdmin);
+        Response res = odontologoController.postOdontologo(odontologoWithoutName, base64CredentialsAdmin);
 
         String resBody = res.getBody().asString();
 
@@ -219,9 +218,9 @@ public class OdontologoTest {
     @Test
     @Order(14)
     public void shouldMessageLastNameEmptyToPostOdontologo() throws MissingPropertyException, IOException {
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.postOdontologo(odontologoWithoutLastName, base64CredentialsAdmin);
+        Response res = odontologoController.postOdontologo(odontologoWithoutLastName, base64CredentialsAdmin);
 
         String resBody = res.getBody().asString();
 
@@ -234,9 +233,9 @@ public class OdontologoTest {
     @Test
     @Order(15)
     public void shouldMessageMatriculaEmptyToPostOdontologo() throws MissingPropertyException, IOException {
-        OdontologoControllers odontologoControllers = new OdontologoControllers();
+        OdontologoController odontologoController = new OdontologoController();
 
-        Response res = odontologoControllers.postOdontologo(odontologoWithoutMatricula, base64CredentialsAdmin);
+        Response res = odontologoController.postOdontologo(odontologoWithoutMatricula, base64CredentialsAdmin);
 
         String resBody = res.getBody().asString();
 

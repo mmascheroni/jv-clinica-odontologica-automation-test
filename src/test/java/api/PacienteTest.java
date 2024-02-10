@@ -2,7 +2,7 @@ package api;
 
 import config.ConfigProperties;
 import config.UserCredentialsConfig;
-import controllers.PacienteControllers;
+import controllers.PacienteController;
 import exceptions.MissingPropertyException;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -62,9 +62,9 @@ public class PacienteTest {
     @Test
     @Order(1)
     public void getPacientesHaveLengthEquals0() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.getPacientes(base64CredentialsAdmin);
+        Response res = pacienteController.getPacientes(base64CredentialsAdmin);
 
         List<Paciente> pacientes = res.jsonPath().getList(".", Paciente.class);
 
@@ -74,9 +74,9 @@ public class PacienteTest {
     @Test
     @Order(2)
     public void postPacienteWithIdEquals1() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.postPaciente(pacienteNew1, base64CredentialsAdmin);
+        Response res = pacienteController.postPaciente(pacienteNew1, base64CredentialsAdmin);
 
         Paciente paciente = res.as(Paciente.class);
 
@@ -93,9 +93,9 @@ public class PacienteTest {
     @Test
     @Order(3)
     public void getPacienteWithIdEquals1() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.getPaciente(1L, base64CredentialsAdmin);
+        Response res = pacienteController.getPaciente(1L, base64CredentialsAdmin);
 
         Paciente paciente = res.as(Paciente.class);
 
@@ -113,9 +113,9 @@ public class PacienteTest {
     @Test
     @Order(4)
     public void getPacientesHaveLengthEquals1() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.getPacientes(base64CredentialsAdmin);
+        Response res = pacienteController.getPacientes(base64CredentialsAdmin);
 
         List<Paciente> pacientes = res.jsonPath().getList(".", Paciente.class);
 
@@ -126,9 +126,9 @@ public class PacienteTest {
     @Test
     @Order(5)
     public void postPacienteWithIdEquals2() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.postPaciente(pacienteNew2, base64CredentialsAdmin);
+        Response res = pacienteController.postPaciente(pacienteNew2, base64CredentialsAdmin);
 
         Paciente paciente = res.as(Paciente.class);
 
@@ -146,9 +146,9 @@ public class PacienteTest {
     @Test
     @Order(6)
     public void getPacienteWithIdEquals2() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.getPaciente(2L, base64CredentialsAdmin);
+        Response res = pacienteController.getPaciente(2L, base64CredentialsAdmin);
 
         Paciente paciente = res.as(Paciente.class);
 
@@ -166,9 +166,9 @@ public class PacienteTest {
     @Test
     @Order(7)
     public void getPacientesHaveLengthEquals2() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.getPacientes(base64CredentialsAdmin);
+        Response res = pacienteController.getPacientes(base64CredentialsAdmin);
 
         List<Paciente> pacientes = res.jsonPath().getList(".", Paciente.class);
 
@@ -178,9 +178,9 @@ public class PacienteTest {
     @Test
     @Order(8)
     public void deletePacienteWithId1() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.deletePaciente(1L, base64CredentialsAdmin);
+        Response res = pacienteController.deletePaciente(1L, base64CredentialsAdmin);
 
         Assert.assertEquals(res.prettyPrint(), "Paciente eliminado");
     }
@@ -189,9 +189,9 @@ public class PacienteTest {
     @Test
     @Order(9)
     public void getPacientesHaveLengthEquals1AfterDelete() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.getPacientes(base64CredentialsAdmin);
+        Response res = pacienteController.getPacientes(base64CredentialsAdmin);
 
         List<Paciente> pacientes = res.jsonPath().getList(".", Paciente.class);
 
@@ -203,9 +203,9 @@ public class PacienteTest {
     @Test
     @Order(10)
     public void shouldNotPostToPaciente() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.postPaciente(pacienteNew2, base64CredentialsUser);
+        Response res = pacienteController.postPaciente(pacienteNew2, base64CredentialsUser);
 
         Assert.assertEquals(res.getStatusCode(), 403);
     }
@@ -213,9 +213,9 @@ public class PacienteTest {
     @Test
     @Order(11)
     public void shouldNotGetPacientes() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.getPacientes(base64CredentialsUser);
+        Response res = pacienteController.getPacientes(base64CredentialsUser);
 
         Assert.assertEquals(res.getStatusCode(), 403);
     }
@@ -223,9 +223,9 @@ public class PacienteTest {
     @Test
     @Order(12)
     public void shouldNotGetPaciente() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.getPaciente(2L, base64CredentialsUser);
+        Response res = pacienteController.getPaciente(2L, base64CredentialsUser);
 
         Assert.assertEquals(res.getStatusCode(), 403);
     }
@@ -233,9 +233,9 @@ public class PacienteTest {
     @Test
     @Order(13)
     public void shouldNotDeletePacientes() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.deletePaciente(2L, base64CredentialsUser);
+        Response res = pacienteController.deletePaciente(2L, base64CredentialsUser);
 
         Assert.assertEquals(res.getStatusCode(), 403);
     }
@@ -245,9 +245,9 @@ public class PacienteTest {
     @Test
     @Order(14)
     public void shouldMessageNameEmptyToPostPaciente() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.postPaciente(pacienteWithoutName, base64CredentialsAdmin);
+        Response res = pacienteController.postPaciente(pacienteWithoutName, base64CredentialsAdmin);
 
         String resBody = res.getBody().asString();
 
@@ -261,9 +261,9 @@ public class PacienteTest {
     @Test
     @Order(15)
     public void shouldMessageLastNameEmptyToPostPaciente() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.postPaciente(pacienteWithoutLastName, base64CredentialsAdmin);
+        Response res = pacienteController.postPaciente(pacienteWithoutLastName, base64CredentialsAdmin);
 
         String resBody = res.getBody().asString();
 
@@ -277,9 +277,9 @@ public class PacienteTest {
     @Test
     @Order(16)
     public void shouldMessageDNIEmptyToPostPaciente() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.postPaciente(pacienteWithoutDNI, base64CredentialsAdmin);
+        Response res = pacienteController.postPaciente(pacienteWithoutDNI, base64CredentialsAdmin);
 
         String resBody = res.getBody().asString();
 
@@ -293,9 +293,9 @@ public class PacienteTest {
     @Test
     @Order(16)
     public void shouldMessageDNILarge11ToPostPaciente() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.postPaciente(pacienteWithDNILarge11, base64CredentialsAdmin);
+        Response res = pacienteController.postPaciente(pacienteWithDNILarge11, base64CredentialsAdmin);
 
         String resBody = res.getBody().asString();
 
@@ -309,9 +309,9 @@ public class PacienteTest {
     @Test
     @Order(17)
     public void shouldMessageFechaIngresoPasadaToPostPaciente() throws MissingPropertyException, IOException {
-        PacienteControllers pacienteControllers = new PacienteControllers();
+        PacienteController pacienteController = new PacienteController();
 
-        Response res = pacienteControllers.postPaciente(pacienteWithLastFechaIngreso, base64CredentialsAdmin);
+        Response res = pacienteController.postPaciente(pacienteWithLastFechaIngreso, base64CredentialsAdmin);
 
         String resBody = res.getBody().asString();
 

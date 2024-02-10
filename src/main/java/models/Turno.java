@@ -7,12 +7,12 @@ public class Turno {
     private Long id;
     private Paciente paciente;
     private Odontologo odontologo;
-    private LocalDateTime fechaYHora;
+    private String fechaYHora;
 
     public Turno() {
     }
 
-    public Turno(Paciente paciente, Odontologo odontologo, LocalDateTime fechaYHora) {
+    public Turno(Paciente paciente, Odontologo odontologo, String fechaYHora) {
         this.paciente = paciente;
         this.odontologo = odontologo;
         this.fechaYHora = fechaYHora;
@@ -38,11 +38,21 @@ public class Turno {
         this.odontologo = odontologo;
     }
 
-    public LocalDateTime getFechaYHora() {
+    public String getFechaYHora() {
         return fechaYHora;
     }
 
-    public void setFechaYHora(LocalDateTime fechaYHora) {
+    public void setFechaYHora(String fechaYHora) {
         this.fechaYHora = fechaYHora;
+    }
+
+    @Override
+    public String toString() {
+        return "Turno{" +
+                "id=" + id +
+                ", paciente=" + paciente +
+                ", odontologo=" + odontologo +
+                ", fechaYHora='" + fechaYHora + '\'' +
+                '}';
     }
 }

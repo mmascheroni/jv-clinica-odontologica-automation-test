@@ -8,15 +8,14 @@ import io.restassured.response.Response;
 import models.Odontologo;
 
 import java.io.IOException;
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class OdontologoControllers {
+public class OdontologoController {
 
     private ConfigProperties configProperties = new ConfigProperties();
 
-    public OdontologoControllers() throws MissingPropertyException, IOException {
+    public OdontologoController() throws MissingPropertyException, IOException {
     }
 
     private String getConfigProperty(String property, String propFileName) throws IOException, MissingPropertyException {
