@@ -47,15 +47,22 @@ public class TurnoTest {
     Domicilio domicilioPaciente = new Domicilio("Calle Test", 1212, "Localidad Test");
     Paciente pacienteUno = new Paciente("PacienteTurnoUno", "TestTurnoPacUno", "12345678", fechaIngresoPaciente, domicilioPaciente);
     Odontologo odontologoUno = new Odontologo("OdontologoTurnoUno", "TestTurnoOdoUno", "ODOTURNO001");
-    Turno turnoNew1 = null;
 
+    Paciente pacienteDos = new Paciente("PacienteTurnoDos", "TestTurnoPacDos", "12345678", fechaIngresoPaciente, domicilioPaciente);
+    Odontologo odontologoDos = new Odontologo("OdontologoTurnoDos", "TestTurnoOdoDos", "ODOTURNO002");
+    Turno turnoNew1 = null;
+    Turno turnoNew2 = null;
 
     @BeforeAll
     public void before() {
         pacienteUno = pacienteController.pacientePost(pacienteUno, base64CredentialsAdmin);
         odontologoUno = odontologoController.odontologoPost(odontologoUno, base64CredentialsAdmin);
 
+        pacienteDos = pacienteController.pacientePost(pacienteDos, base64CredentialsAdmin);
+        odontologoDos = odontologoController.odontologoPost(odontologoDos, base64CredentialsAdmin);
+
         turnoNew1 = new Turno(pacienteUno, odontologoUno, fechaHoraString);
+        turnoNew2 = new Turno(pacienteUno, odontologoUno, fechaHoraString);
     }
 
 
@@ -63,13 +70,9 @@ public class TurnoTest {
     @Order(1)
     public void getTurnosIsEmpty() throws MissingPropertyException, IOException {
         TurnoController turnoController = new TurnoController();
-
         Response res = turnoController.getTurnos(base64CredentialsAdmin);
 
         List<Map<String, Object>> listTurnos = res.jsonPath().getList(".");
-
-        System.out.println("LISTA TURNOS EMPTY:" + listTurnos);
-
 
         Assert.assertTrue( listTurnos.isEmpty(), "La lista de turnos no está vacía");
     }
@@ -78,35 +81,21 @@ public class TurnoTest {
     @Order(2)
     public void postTurnoWithId1() throws MissingPropertyException, IOException {
         TurnoController turnoController = new TurnoController();
-
         Response res = turnoController.postTurno(turnoNew1, base64CredentialsAdmin);
 
         Paciente paciente = turnoNew1.getPaciente();
         Odontologo odontologo = turnoNew1.getOdontologo();
 
-        System.out.println("TURNONEW1: " + turnoNew1);
-
         JsonPath jsonPathRes = new JsonPath(res.getBody().asString());
-
-        System.out.println("JSONRESPOST: " + jsonPathRes);
-
         Long id = jsonPathRes.getLong("id");
-
         String nombreCompletoPaciente = jsonPathRes.getString("paciente");
-
         String nombreCompletoOdontologo = jsonPathRes.getString("odontologo");
-
         String fechaYHora = jsonPathRes.getString("fechaYHora");
-
         LocalDateTime fechaYHoraLDT = localDateTimeAdapter.stringToLocalDateTimeResTurno(fechaYHora,"dd-MM-yyyy HH:mm");
-
         String fechaYHoraFormateada = localDateTimeAdapter.localDateTimeToString(fechaYHoraLDT, "yyyy-MM-dd HH:mm");
 
         Turno turno = new Turno(paciente, odontologo, fechaYHoraFormateada);
-
         turno.setId(id);
-
-        System.out.println("TURNO LUEGO DE CREADO: " + turno);
 
         Assert.assertEquals(id, turno.getId());
         Assert.assertEquals(nombreCompletoPaciente, paciente.getNombre() + " " + paciente.getApellido());
@@ -119,26 +108,88 @@ public class TurnoTest {
     @Order(3)
     public void getTurnosSizeIsEquals1() throws MissingPropertyException, IOException {
         TurnoController turnoController = new TurnoController();
-
         Response res = turnoController.getTurnos(base64CredentialsAdmin);
 
         List<Map<String, Object>> listTurnos = res.jsonPath().getList(".");
 
-        System.out.println("LISTA SIZE 1: " + listTurnos);
-
         Assert.assertEquals(listTurnos.size(), 1);
     }
 
-//    @Test
-//    @Order(4)
-//    public void postTurnoWithId2() throws MissingPropertyException, IOException {
-//        TurnoController turnoController = new TurnoController();
-//
-//        Response res = turnoController.postTurno(turnoNew2, base64CredentialsAdmin);
-//
-//        Turno turno = res.as(Turno.class);
-//
-//        Assert.assertEquals(turno.getId(), 1);
-//    }
+    @Test
+    @Order(3)
+    public void getTurnoWithId1() throws MissingPropertyException, IOException {
+        TurnoController turnoController = new TurnoController();
+        Response res = turnoController.getTurno(1L, base64CredentialsAdmin);
+
+        JsonPath jsonPathRes = new JsonPath(res.getBody().asString());
+        Long id = jsonPathRes.getLong("id");
+        String nombreCompletoPaciente = jsonPathRes.getString("paciente");
+        String nombreCompletoOdontologo = jsonPathRes.getString("odontologo");
+        String fechaYHora = jsonPathRes.getString("fechaYHora");
+        LocalDateTime fechaYHoraLDT = localDateTimeAdapter.stringToLocalDateTimeResTurno(fechaYHora,"dd-MM-yyyy HH:mm");
+        String fechaYHoraFormateada = localDateTimeAdapter.localDateTimeToString(fechaYHoraLDT, "yyyy-MM-dd HH:mm");
+
+        Assert.assertEquals(id, 1L);
+        Assert.assertEquals(nombreCompletoPaciente, turnoNew1.getPaciente().getNombre() + " " + turnoNew1.getPaciente().getApellido());
+        Assert.assertEquals(nombreCompletoOdontologo, turnoNew1.getOdontologo().getNombre() + " " + turnoNew1.getOdontologo().getApellido());
+        Assert.assertEquals(fechaYHoraFormateada, turnoNew1.getFechaYHora() );
+    }
+
+    @Test
+    @Order(4)
+    public void postTurnoWithId2() throws MissingPropertyException, IOException {
+        TurnoController turnoController = new TurnoController();
+        Response res = turnoController.postTurno(turnoNew2, base64CredentialsAdmin);
+
+        Paciente paciente = turnoNew2.getPaciente();
+        Odontologo odontologo = turnoNew2.getOdontologo();
+
+        JsonPath jsonPathRes = new JsonPath(res.getBody().asString());
+        Long id = jsonPathRes.getLong("id");
+        String nombreCompletoPaciente = jsonPathRes.getString("paciente");
+        String nombreCompletoOdontologo = jsonPathRes.getString("odontologo");
+        String fechaYHora = jsonPathRes.getString("fechaYHora");
+        LocalDateTime fechaYHoraLDT = localDateTimeAdapter.stringToLocalDateTimeResTurno(fechaYHora,"dd-MM-yyyy HH:mm");
+        String fechaYHoraFormateada = localDateTimeAdapter.localDateTimeToString(fechaYHoraLDT, "yyyy-MM-dd HH:mm");
+
+        Turno turno = new Turno(paciente, odontologo, fechaYHoraFormateada);
+        turno.setId(id);
+
+        Assert.assertEquals(id, turno.getId());
+        Assert.assertEquals(nombreCompletoPaciente, paciente.getNombre() + " " + paciente.getApellido());
+        Assert.assertEquals(nombreCompletoOdontologo, odontologo.getNombre() + " " + odontologo.getApellido());
+        Assert.assertEquals(turno.getFechaYHora(), turnoNew2.getFechaYHora() );
+    }
+
+    @Test
+    @Order(5)
+    public void getTurnosSizeIsEquals2() throws MissingPropertyException, IOException {
+        TurnoController turnoController = new TurnoController();
+        Response res = turnoController.getTurnos(base64CredentialsAdmin);
+
+        List<Map<String, Object>> listTurnos = res.jsonPath().getList(".");
+
+        Assert.assertEquals(listTurnos.size(), 2);
+    }
+
+    @Test
+    @Order(6)
+    public void deleteTurnoWithId1() throws MissingPropertyException, IOException {
+        TurnoController turnoController = new TurnoController();
+        Response res = turnoController.deleteTurno(1L, base64CredentialsAdmin);
+
+        Assert.assertEquals(res.prettyPrint(), "El turno ha sido eliminado correctamente");
+    }
+
+    @Test
+    @Order(7)
+    public void getTurnosSizeIsEquals1AfterDelete() throws MissingPropertyException, IOException {
+        TurnoController turnoController = new TurnoController();
+        Response res = turnoController.getTurnos(base64CredentialsAdmin);
+
+        List<Map<String, Object>> listTurnos = res.jsonPath().getList(".");
+
+        Assert.assertEquals(listTurnos.size(), 1);
+    }
 
 }
