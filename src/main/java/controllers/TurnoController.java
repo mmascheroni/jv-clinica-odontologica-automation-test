@@ -54,19 +54,6 @@ public class TurnoController {
     public Response postTurno(Turno turno, String credentials) {
         RestAssured.defaultParser = Parser.JSON;
 
-//
-//        JSONObject jsonTurno = new JSONObject();
-//        JSONObject paciente = new JSONObject();
-//        paciente.put("id", turno.getPaciente().getId());
-//        jsonTurno.put("paciente", paciente);
-//
-//        JSONObject odontologo = new JSONObject();
-//        odontologo.put("id", turno.getOdontologo().getId());
-//        jsonTurno.put("odontologo", odontologo);
-//
-//        jsonTurno.put("fechaYHora", turno.getFechaYHora());
-
-
         Response res = given()
                 .header("Authorization", "Basic " + credentials)
                 .contentType("application/json")
@@ -81,7 +68,7 @@ public class TurnoController {
 
         Response res = given()
                 .header("Authorization", "Basic " + credentials)
-                .delete(baseUrl + "/turnos/" + turnoId);
+                .delete(baseUrl + "/turnos/eliminar/" + turnoId);
 
 
         return res;
