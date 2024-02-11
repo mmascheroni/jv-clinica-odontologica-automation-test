@@ -84,4 +84,19 @@ public class OdontologoController {
 
         return odontologo;
     }
+
+
+    public Odontologo odontologoPost(Odontologo odontologo, String credentials) {
+        RestAssured.defaultParser = Parser.JSON;
+
+        Response res = given()
+                .header("Authorization", "Basic " + credentials)
+                .contentType("application/json")
+                .body(odontologo)
+                .post(baseUrl + "/odontologos/registrar");
+
+        Odontologo odontologoCreated = res.as(Odontologo.class);
+
+        return odontologoCreated;
+    }
 }

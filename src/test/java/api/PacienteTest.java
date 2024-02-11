@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.testng.Assert;
+import utils.LocalDateAdapter;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -22,6 +23,8 @@ import java.util.List;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PacienteTest {
 
+    private LocalDateAdapter localDateAdapter = new LocalDateAdapter();
+
     private ConfigProperties configProperties = new ConfigProperties();
 
     private UserCredentialsConfig userCredentialsConfig = new UserCredentialsConfig(configProperties);
@@ -30,13 +33,9 @@ public class PacienteTest {
 
     private String base64CredentialsUser = userCredentialsConfig.getUserBase64Credentials("USER", "PASSWORD_USER", "config");
 
-    LocalDate localDate = LocalDate.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    String fechaIngresoString = localDate.format(formatter);
+    String fechaIngresoString = localDateAdapter.localDateToString(LocalDate.now(), "yyyy-MM-dd");
 
-    LocalDate yesterday = LocalDate.now().minusDays(1);
-
-    String fechaIngresoPasadaString = yesterday.format(formatter);
+    String fechaIngresoPasadaString = localDateAdapter.localDateToString(LocalDate.now().minusDays(1), "yyyy-MM-dd");
 
     Domicilio domicilio1 = new Domicilio("Calle Test", 2024, "Montevideo");
 

@@ -83,4 +83,19 @@ public class PacienteController {
 
         return paciente;
     }
+
+
+    public Paciente pacientePost(Paciente paciente, String credentials) {
+        RestAssured.defaultParser = Parser.JSON;
+
+        Response res = given()
+                .header("Authorization", "Basic " + credentials)
+                .contentType("application/json")
+                .body(paciente)
+                .post(baseUrl + "/pacientes/registrar");
+
+        Paciente pacienteCreated = res.as(Paciente.class);
+
+        return pacienteCreated;
+    }
 }

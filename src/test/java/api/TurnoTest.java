@@ -8,59 +8,56 @@ import controllers.TurnoController;
 import exceptions.MissingPropertyException;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import models.Domicilio;
 import models.Odontologo;
 import models.Paciente;
 import models.Turno;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.testng.Assert;
+import utils.LocalDateAdapter;
+import utils.LocalDateTimeAdapter;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TurnoTest {
 
+    private LocalDateTimeAdapter localDateTimeAdapter = new LocalDateTimeAdapter();
+    private LocalDateAdapter localDateAdapter = new LocalDateAdapter();
     private ConfigProperties configProperties = new ConfigProperties();
-
     private UserCredentialsConfig userCredentialsConfig = new UserCredentialsConfig(configProperties);
 
     private String base64CredentialsAdmin = userCredentialsConfig.getUserBase64Credentials("USER_ADMIN", "PASSWORD_ADMIN", "config");
-
     private String base64CredentialsUser = userCredentialsConfig.getUserBase64Credentials("USER", "PASSWORD_USER", "config");
 
     public TurnoTest() throws MissingPropertyException, IOException {
     }
 
-    LocalDateTime localDateTime = LocalDateTime.now().plusDays(5);
-
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-    DateTimeFormatter formatterRes = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-
-    String fechaHoraString = localDateTime.format(formatter);
+    String fechaHoraString = localDateTimeAdapter.localDateTimeToString(LocalDateTime.now().plusDays(5), "yyyy-MM-dd HH:mm");
+    String fechaIngresoPaciente = localDateAdapter.localDateToString(LocalDate.now(), "yyyy-MM-dd");
 
     private OdontologoController odontologoController = new OdontologoController();
-
     private PacienteController pacienteController = new PacienteController();
 
-    Paciente pacienteWitId3 = pacienteController.paciente(1L, base64CredentialsAdmin);
+    Domicilio domicilioPaciente = new Domicilio("Calle Test", 1212, "Localidad Test");
+    Paciente pacienteUno = new Paciente("PacienteTurnoUno", "TestTurnoPacUno", "12345678", fechaIngresoPaciente, domicilioPaciente);
+    Odontologo odontologoUno = new Odontologo("OdontologoTurnoUno", "TestTurnoOdoUno", "ODOTURNO001");
+    Turno turnoNew1 = null;
 
-//    Paciente pacienteWithId4 = pacienteController.paciente(4L, base64CredentialsAdmin);
-//
-//    Paciente pacienteWithId5 = pacienteController.paciente(5L, base64CredentialsAdmin);
 
-    Odontologo odontologoWitId3 = odontologoController.odontologo(1L, base64CredentialsAdmin);
+    @BeforeAll
+    public void before() {
+        pacienteUno = pacienteController.pacientePost(pacienteUno, base64CredentialsAdmin);
+        odontologoUno = odontologoController.odontologoPost(odontologoUno, base64CredentialsAdmin);
 
-//    Odontologo odontologoWithId4 = odontologoController.odontologo(4L, base64CredentialsAdmin);
-//
-//    Odontologo odontologoWithId5 = odontologoController.odontologo(5L, base64CredentialsAdmin);
+        turnoNew1 = new Turno(pacienteUno, odontologoUno, fechaHoraString);
+    }
 
-    Turno turnoNew1 = new Turno(pacienteWitId3, odontologoWitId3, fechaHoraString );
-
-//    Turno turnoNew2 = new Turno(pacienteWithId4, odontologoWithId4, fechaHoraString );
 
     @Test
     @Order(1)
@@ -70,6 +67,8 @@ public class TurnoTest {
         Response res = turnoController.getTurnos(base64CredentialsAdmin);
 
         List<Map<String, Object>> listTurnos = res.jsonPath().getList(".");
+
+        System.out.println("LISTA TURNOS EMPTY:" + listTurnos);
 
 
         Assert.assertTrue( listTurnos.isEmpty(), "La lista de turnos no está vacía");
@@ -85,9 +84,11 @@ public class TurnoTest {
         Paciente paciente = turnoNew1.getPaciente();
         Odontologo odontologo = turnoNew1.getOdontologo();
 
-        String resBody = res.getBody().asString();
+        System.out.println("TURNONEW1: " + turnoNew1);
 
-        JsonPath jsonPathRes = new JsonPath(resBody);
+        JsonPath jsonPathRes = new JsonPath(res.getBody().asString());
+
+        System.out.println("JSONRESPOST: " + jsonPathRes);
 
         Long id = jsonPathRes.getLong("id");
 
@@ -97,19 +98,19 @@ public class TurnoTest {
 
         String fechaYHora = jsonPathRes.getString("fechaYHora");
 
-        DateTimeFormatter formatoRes = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        LocalDateTime fechaYHoraLDT = localDateTimeAdapter.stringToLocalDateTimeResTurno(fechaYHora,"dd-MM-yyyy HH:mm");
 
-        LocalDateTime fechaYHoraLDT = LocalDateTime.parse(fechaYHora, formatoRes);
-
-        String fechaYHoraFormateada = fechaYHoraLDT.format(formatter);
+        String fechaYHoraFormateada = localDateTimeAdapter.localDateTimeToString(fechaYHoraLDT, "yyyy-MM-dd HH:mm");
 
         Turno turno = new Turno(paciente, odontologo, fechaYHoraFormateada);
 
         turno.setId(id);
 
+        System.out.println("TURNO LUEGO DE CREADO: " + turno);
+
         Assert.assertEquals(id, turno.getId());
-        Assert.assertEquals(turnoNew1.getPaciente().getNombre() + " " + turnoNew1.getPaciente().getApellido(), nombreCompletoPaciente);
-        Assert.assertEquals(turnoNew1.getOdontologo().getNombre() + " " + turnoNew1.getOdontologo().getApellido(), nombreCompletoOdontologo);
+        Assert.assertEquals(nombreCompletoPaciente, paciente.getNombre() + " " + paciente.getApellido());
+        Assert.assertEquals(nombreCompletoOdontologo, odontologo.getNombre() + " " + odontologo.getApellido());
         Assert.assertEquals(turno.getFechaYHora(), turnoNew1.getFechaYHora() );
     }
 
@@ -123,6 +124,7 @@ public class TurnoTest {
 
         List<Map<String, Object>> listTurnos = res.jsonPath().getList(".");
 
+        System.out.println("LISTA SIZE 1: " + listTurnos);
 
         Assert.assertEquals(listTurnos.size(), 1);
     }
