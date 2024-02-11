@@ -23,4 +23,20 @@ public class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>, Json
     public JsonElement serialize(LocalDateTime localDateTime, Type srcType, JsonSerializationContext context) {
         return new JsonPrimitive(formatter.format(localDateTime));
     }
+
+    public LocalDateTime stringToLocalDateTimeResTurno(String fechaYHora, String pattern) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+
+        LocalDateTime fechaYHoraLDT = LocalDateTime.parse(fechaYHora, formatter);
+
+        return fechaYHoraLDT;
+    }
+
+    public String localDateTimeToString(LocalDateTime fechaYHora, String pattern) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+
+        String fechaYHoraLDT = fechaYHora.format(formatter);
+
+        return fechaYHoraLDT;
+    }
 }
