@@ -4,12 +4,10 @@ import config.ConfigProperties;
 import exceptions.MissingPropertyException;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import models.Odontologo;
-import models.Paciente;
+
 import models.Turno;
-import org.json.simple.JSONObject;
+
 
 import java.io.IOException;
 

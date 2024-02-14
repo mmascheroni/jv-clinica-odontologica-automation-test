@@ -39,6 +39,8 @@ public class TurnoTest {
     }
 
     String fechaHoraString = localDateTimeAdapter.localDateTimeToString(LocalDateTime.now().plusDays(5), "yyyy-MM-dd HH:mm");
+
+    String fechaHoraNowString = localDateTimeAdapter.localDateTimeToString(LocalDateTime.now(), "yyyy-MM-dd HH:mm");
     String fechaIngresoPaciente = localDateAdapter.localDateToString(LocalDate.now(), "yyyy-MM-dd");
 
     private OdontologoController odontologoController = new OdontologoController();
@@ -49,9 +51,16 @@ public class TurnoTest {
     Odontologo odontologoUno = new Odontologo("OdontologoTurnoUno", "TestTurnoOdoUno", "ODOTURNO001");
 
     Paciente pacienteDos = new Paciente("PacienteTurnoDos", "TestTurnoPacDos", "12345678", fechaIngresoPaciente, domicilioPaciente);
+    Paciente pacienteNull = null;
     Odontologo odontologoDos = new Odontologo("OdontologoTurnoDos", "TestTurnoOdoDos", "ODOTURNO002");
+    Odontologo odontologoNull = null;
     Turno turnoNew1 = null;
     Turno turnoNew2 = null;
+    Turno turnoPacienteAndOdontologoNull = null;
+    Turno turnoPacienteAndOdontologoNotExists = null;
+    Turno turnoPacienteNotExist = null;
+    Turno turnoOdontologoNotExist = null;
+    Turno turnoFechaLessThanToday = null;
 
     @BeforeAll
     public void before() {
@@ -63,6 +72,15 @@ public class TurnoTest {
 
         turnoNew1 = new Turno(pacienteUno, odontologoUno, fechaHoraString);
         turnoNew2 = new Turno(pacienteUno, odontologoUno, fechaHoraString);
+        turnoPacienteAndOdontologoNull = new Turno(pacienteNull, odontologoNull, fechaHoraString);
+
+        turnoPacienteAndOdontologoNotExists = new Turno(new Paciente(100L,"PacienteTurnoDos", "TestTurnoPacDos", "12345678", fechaIngresoPaciente, domicilioPaciente), new Odontologo(100L, "OdontologoTurnoDos", "TestTurnoOdoDos", "ODOTURNO002"), fechaHoraString);
+
+        turnoOdontologoNotExist = new Turno(pacienteUno, new Odontologo(100L, "OdontologoTurnoDos", "TestTurnoOdoDos", "ODOTURNO002"), fechaHoraString);
+
+        turnoPacienteNotExist = new Turno(new Paciente(100L,"PacienteTurnoDos", "TestTurnoPacDos", "12345678", fechaIngresoPaciente, domicilioPaciente), odontologoUno, fechaHoraString);
+
+        turnoFechaLessThanToday = new Turno(pacienteUno, odontologoUno, fechaHoraNowString);
     }
 
 
@@ -190,6 +208,75 @@ public class TurnoTest {
         List<Map<String, Object>> listTurnos = res.jsonPath().getList(".");
 
         Assert.assertEquals(listTurnos.size(), 1);
+    }
+
+
+    @Test
+    @Order(8)
+    public void postTurnoWithOdontologoAndPacienteNull() throws MissingPropertyException, IOException {
+        TurnoController turnoController = new TurnoController();
+        Response res = turnoController.postTurno(turnoPacienteAndOdontologoNull, base64CredentialsAdmin);
+
+        JsonPath jsonPathRes = new JsonPath(res.getBody().asString());
+        String messagePacienteNull = jsonPathRes.getString("paciente");
+        String messageOdontologoNull = jsonPathRes.getString("odontologo");
+
+        Assert.assertEquals(res.getStatusCode(), 400);
+        Assert.assertEquals(messagePacienteNull, "El paciente no puede ser nulo");
+        Assert.assertEquals(messageOdontologoNull, "El odontologo no puede ser nulo");
+    }
+
+    @Test
+    @Order(9)
+    public void postTurnoWithOdontologoAndPacienteNoExists() throws MissingPropertyException, IOException {
+        TurnoController turnoController = new TurnoController();
+        Response res = turnoController.postTurno(turnoPacienteAndOdontologoNotExists, base64CredentialsAdmin);
+
+        JsonPath jsonPathRes = new JsonPath(res.getBody().asString());
+        String message = jsonPathRes.getString("message");
+
+        Assert.assertEquals(res.getStatusCode(), 400);
+        Assert.assertEquals(message, "Recurso no encontrado: El paciente y el odontologo no se encuentran en la base de datos");
+    }
+
+
+    @Test
+    @Order(10)
+    public void postTurnoWithOdontologoNoExist() throws MissingPropertyException, IOException {
+        TurnoController turnoController = new TurnoController();
+        Response res = turnoController.postTurno(turnoOdontologoNotExist, base64CredentialsAdmin);
+
+        JsonPath jsonPathRes = new JsonPath(res.getBody().asString());
+        String message = jsonPathRes.getString("message");
+
+        Assert.assertEquals(res.getStatusCode(), 400);
+        Assert.assertEquals(message, "Recurso no encontrado: El odontologo no se encuentra en la base de datos");
+    }
+
+    @Test
+    @Order(11)
+    public void postTurnoWithPacienteNoExist() throws MissingPropertyException, IOException {
+        TurnoController turnoController = new TurnoController();
+        Response res = turnoController.postTurno(turnoPacienteNotExist, base64CredentialsAdmin);
+
+        JsonPath jsonPathRes = new JsonPath(res.getBody().asString());
+        String message = jsonPathRes.getString("message");
+
+        Assert.assertEquals(res.getStatusCode(), 400);
+        Assert.assertEquals(message, "Recurso no encontrado: El paciente no se encuentra en la base de datos");
+    }
+
+    @Test
+    @Order(12)
+    public void postTurnoWithFechaLessThanToday() throws MissingPropertyException, IOException {
+        TurnoController turnoController = new TurnoController();
+        Response res = turnoController.postTurno(turnoFechaLessThanToday, base64CredentialsAdmin);
+
+        JsonPath jsonPathRes = new JsonPath(res.getBody().asString());
+        String message = jsonPathRes.getString("fechaYHora");
+
+        Assert.assertEquals(res.getStatusCode(), 400);
+        Assert.assertEquals(message, "La fecha y hora no puede ser anterior al día de hoy, ni a la hora actual");
     }
 
 }
