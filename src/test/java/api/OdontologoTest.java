@@ -7,16 +7,13 @@ import exceptions.MissingPropertyException;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import models.Odontologo;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.testng.annotations.Test;
 import org.testng.Assert;
-import static org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+
 
 import java.io.IOException;
 import java.util.List;
 
-@TestMethodOrder(OrderAnnotation.class)
 public class OdontologoTest {
 
     private ConfigProperties configProperties = new ConfigProperties();
@@ -41,8 +38,7 @@ public class OdontologoTest {
     }
 
     // TESTS WITH USER ADMIN
-    @Test()
-    @Order(1)
+    @Test(priority = 1)
     public void getOdontologosIsEmpty() throws MissingPropertyException, IOException {
 
         OdontologoController odontologoController = new OdontologoController();
@@ -54,8 +50,7 @@ public class OdontologoTest {
         Assert.assertTrue( odontologos.isEmpty(), "La lista de odontólogos no está vacía");
     }
 
-    @Test
-    @Order(2)
+    @Test(priority = 2)
     public void postOdontologoWithId1() throws MissingPropertyException, IOException {
 
         OdontologoController odontologoController = new OdontologoController();
@@ -71,8 +66,7 @@ public class OdontologoTest {
     }
 
 
-    @Test
-    @Order(3)
+    @Test(priority = 3)
     public void getOdontologoByIdEquals1() throws MissingPropertyException, IOException {
 
         OdontologoController odontologoController = new OdontologoController();
@@ -88,8 +82,7 @@ public class OdontologoTest {
     }
 
 
-    @Test
-    @Order(4)
+    @Test(priority = 4)
     public void getOdontologosHaveLengthEquals1() throws MissingPropertyException, IOException {
 
         OdontologoController odontologoController = new OdontologoController();
@@ -101,8 +94,7 @@ public class OdontologoTest {
         Assert.assertEquals( odontologos.size(), 1);
     }
 
-    @Test
-    @Order(5)
+    @Test(priority = 5)
     public void postOdontologoWithId2() throws MissingPropertyException, IOException {
 
         OdontologoController odontologoController = new OdontologoController();
@@ -118,8 +110,7 @@ public class OdontologoTest {
     }
 
 
-    @Test
-    @Order(6)
+    @Test(priority = 6)
     public void getOdontologosHaveLengthEquals2() throws MissingPropertyException, IOException {
 
         OdontologoController odontologoController = new OdontologoController();
@@ -131,8 +122,7 @@ public class OdontologoTest {
         Assert.assertEquals( odontologos.size(), 2);
     }
 
-    @Test
-    @Order(7)
+    @Test(priority = 7)
     public void deleteOdontologoWithId1() throws MissingPropertyException, IOException {
 
         OdontologoController odontologoController = new OdontologoController();
@@ -142,8 +132,7 @@ public class OdontologoTest {
         Assert.assertEquals( res.prettyPrint(), "Odontologo eliminado");
     }
 
-    @Test
-    @Order(8)
+    @Test(priority = 8)
     public void getOdontologosHaveLengthEquals1AfterDelete() throws MissingPropertyException, IOException {
 
         OdontologoController odontologoController = new OdontologoController();
@@ -157,8 +146,7 @@ public class OdontologoTest {
 
 
     // TESTS WITH USER
-    @Test
-    @Order(9)
+    @Test(priority = 9)
     public void shouldNotPostToOdontologo() throws MissingPropertyException, IOException {
         OdontologoController odontologoController = new OdontologoController();
 
@@ -167,8 +155,7 @@ public class OdontologoTest {
         Assert.assertEquals(res.getStatusCode(), 403);
     }
 
-    @Test
-    @Order(10)
+    @Test(priority = 10)
     public void shouldNotGetOdontologos() throws MissingPropertyException, IOException {
         OdontologoController odontologoController = new OdontologoController();
 
@@ -177,8 +164,7 @@ public class OdontologoTest {
         Assert.assertEquals(res.getStatusCode(), 403);
     }
 
-    @Test
-    @Order(11)
+    @Test(priority = 11)
     public void shouldNotGetOdontologo() throws MissingPropertyException, IOException {
         OdontologoController odontologoController = new OdontologoController();
 
@@ -187,8 +173,7 @@ public class OdontologoTest {
         Assert.assertEquals(res.getStatusCode(), 403);
     }
 
-    @Test
-    @Order(12)
+    @Test(priority = 12)
     public void shouldNotDeleteOdontologo() throws MissingPropertyException, IOException {
         OdontologoController odontologoController = new OdontologoController();
 
@@ -199,8 +184,7 @@ public class OdontologoTest {
 
 
     // TEST WITHOUT DATA ON BODY
-    @Test
-    @Order(13)
+    @Test(priority = 13)
     public void shouldMessageNameEmptyToPostOdontologo() throws MissingPropertyException, IOException {
         OdontologoController odontologoController = new OdontologoController();
 
@@ -215,8 +199,7 @@ public class OdontologoTest {
     }
 
 
-    @Test
-    @Order(14)
+    @Test(priority = 14)
     public void shouldMessageLastNameEmptyToPostOdontologo() throws MissingPropertyException, IOException {
         OdontologoController odontologoController = new OdontologoController();
 
@@ -230,8 +213,7 @@ public class OdontologoTest {
         Assert.assertEquals(messageError, "Debe especificarse el apellido del odontologo, no puede quedar vacio");
     }
 
-    @Test
-    @Order(15)
+    @Test(priority = 15)
     public void shouldMessageMatriculaEmptyToPostOdontologo() throws MissingPropertyException, IOException {
         OdontologoController odontologoController = new OdontologoController();
 

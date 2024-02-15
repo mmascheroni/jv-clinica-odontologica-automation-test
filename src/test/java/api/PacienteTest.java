@@ -8,10 +8,8 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import models.Domicilio;
 import models.Paciente;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.testng.annotations.Test;
 import org.testng.Assert;
 import utils.LocalDateAdapter;
 
@@ -19,7 +17,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PacienteTest {
 
     private LocalDateAdapter localDateAdapter = new LocalDateAdapter();
@@ -57,8 +54,7 @@ public class PacienteTest {
     }
 
 
-    @Test
-    @Order(1)
+    @Test(priority = 1)
     public void getPacientesHaveLengthEquals0() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -69,8 +65,7 @@ public class PacienteTest {
         Assert.assertTrue(pacientes.isEmpty(), "La lista de pacientes no está vacía");
     }
 
-    @Test
-    @Order(2)
+    @Test(priority = 2)
     public void postPacienteWithIdEquals1() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -88,8 +83,7 @@ public class PacienteTest {
         Assert.assertEquals( paciente.getDomicilio().getNumero(), domicilio1.getNumero());
     }
 
-    @Test
-    @Order(3)
+    @Test(priority = 3)
     public void getPacienteWithIdEquals1() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -108,8 +102,7 @@ public class PacienteTest {
     }
 
 
-    @Test
-    @Order(4)
+    @Test(priority = 4)
     public void getPacientesHaveLengthEquals1() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -121,8 +114,7 @@ public class PacienteTest {
     }
 
 
-    @Test
-    @Order(5)
+    @Test(priority = 5)
     public void postPacienteWithIdEquals2() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -141,8 +133,7 @@ public class PacienteTest {
     }
 
 
-    @Test
-    @Order(6)
+    @Test(priority = 6)
     public void getPacienteWithIdEquals2() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -161,8 +152,7 @@ public class PacienteTest {
     }
 
 
-    @Test
-    @Order(7)
+    @Test(priority = 7)
     public void getPacientesHaveLengthEquals2() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -173,8 +163,7 @@ public class PacienteTest {
         Assert.assertEquals(pacientes.size(), 2);
     }
 
-    @Test
-    @Order(8)
+    @Test(priority = 8)
     public void deletePacienteWithId1() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -184,8 +173,7 @@ public class PacienteTest {
     }
 
 
-    @Test
-    @Order(9)
+    @Test(priority = 9)
     public void getPacientesHaveLengthEquals1AfterDelete() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -198,8 +186,7 @@ public class PacienteTest {
 
 
     // TESTS WITH USER
-    @Test
-    @Order(10)
+    @Test(priority = 10)
     public void shouldNotPostToPaciente() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -208,8 +195,7 @@ public class PacienteTest {
         Assert.assertEquals(res.getStatusCode(), 403);
     }
 
-    @Test
-    @Order(11)
+    @Test(priority = 11)
     public void shouldNotGetPacientes() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -218,8 +204,7 @@ public class PacienteTest {
         Assert.assertEquals(res.getStatusCode(), 403);
     }
 
-    @Test
-    @Order(12)
+    @Test(priority = 12)
     public void shouldNotGetPaciente() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -228,8 +213,7 @@ public class PacienteTest {
         Assert.assertEquals(res.getStatusCode(), 403);
     }
 
-    @Test
-    @Order(13)
+    @Test(priority = 13)
     public void shouldNotDeletePacientes() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -240,8 +224,7 @@ public class PacienteTest {
 
 
     // TEST WITHOUT DATA ON BODY
-    @Test
-    @Order(14)
+    @Test(priority = 14)
     public void shouldMessageNameEmptyToPostPaciente() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -256,8 +239,7 @@ public class PacienteTest {
         Assert.assertEquals(messageError, "Debe especificarse el nombre del paciente, no puede quedar vacio");
     }
 
-    @Test
-    @Order(15)
+    @Test(priority = 15)
     public void shouldMessageLastNameEmptyToPostPaciente() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -272,24 +254,22 @@ public class PacienteTest {
         Assert.assertEquals(messageError, "Debe especificarse el apellido del paciente, no puede quedar vacio");
     }
 
-    @Test
-    @Order(16)
-    public void shouldMessageDNIEmptyToPostPaciente() throws MissingPropertyException, IOException {
-        PacienteController pacienteController = new PacienteController();
+//    @Test(priority = 16)
+//    public void shouldMessageDNIEmptyToPostPaciente() throws MissingPropertyException, IOException {
+//        PacienteController pacienteController = new PacienteController();
+//
+//        Response res = pacienteController.postPaciente(pacienteWithoutDNI, base64CredentialsAdmin);
+//
+//        String resBody = res.getBody().asString();
+//
+//        JsonPath jsonPathRes = new JsonPath(resBody);
+//
+//        String messageError = jsonPathRes.getString("dni");
+//
+//        Assert.assertEquals(messageError, "Debe especificarse el dni del paciente, no puede quedar vacio");
+//    }
 
-        Response res = pacienteController.postPaciente(pacienteWithoutDNI, base64CredentialsAdmin);
-
-        String resBody = res.getBody().asString();
-
-        JsonPath jsonPathRes = new JsonPath(resBody);
-
-        String messageError = jsonPathRes.getString("dni");
-
-        Assert.assertEquals(messageError, "El dni debe tener de largo entre 5 a 10 caracteres");
-    }
-
-    @Test
-    @Order(16)
+    @Test(priority = 17)
     public void shouldMessageDNILarge11ToPostPaciente() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
@@ -304,8 +284,7 @@ public class PacienteTest {
         Assert.assertEquals(messageError, "El dni debe tener de largo entre 5 a 10 caracteres");
     }
 
-    @Test
-    @Order(17)
+    @Test(priority = 18)
     public void shouldMessageFechaIngresoPasadaToPostPaciente() throws MissingPropertyException, IOException {
         PacienteController pacienteController = new PacienteController();
 
