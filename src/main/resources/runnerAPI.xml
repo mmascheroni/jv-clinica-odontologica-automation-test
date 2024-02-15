@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="API-CLINICA_ODONTOLOGICA" >
+    <test name="API_CLINICA_ODONTOLOGICA" >
+        <classes>
+            <class name="api.OdontologoTest" />
+            <class name="api.PacienteTest" />
+            <class name="api.TurnoTest" />
+        </classes>
+    </test>
+</suite>
