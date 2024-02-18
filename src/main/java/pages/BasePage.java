@@ -4,7 +4,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -41,23 +40,21 @@ public class BasePage {
     }
 
     protected WebElement findElement(By locator) {
-        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         return driver.findElement(locator);
     }
 
     protected WebElement findElementByXPath(String locator) {
-        return wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(locator)));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(locator)));
     }
 
     protected void sendKeys(By locator, String keys) {
-        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
         findElement(locator).clear();
         findElement(locator).sendKeys(keys);
     }
 
     protected void sendKey(CharSequence key, By locator) {
-        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
-        this.findElement(locator).sendKeys(key);
+        findElement(locator).sendKeys(key);
     }
 
     protected void click(By locator) {
@@ -66,7 +63,6 @@ public class BasePage {
     }
 
     protected String getText(By locator) {
-        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
         return findElement(locator).getText();
     }
 
@@ -79,7 +75,14 @@ public class BasePage {
 
 
     protected List<WebElement> tableRows(String locator) {
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(locator+"/tr")));
         return findElementByXPath(locator).findElements(By.tagName("tr"));
+    }
+
+    protected void dismissAlert() {
+        driver.switchTo().alert().dismiss();
+    }
+
+    protected void acceptAlert() {
+        driver.switchTo().alert().accept();
     }
 }
