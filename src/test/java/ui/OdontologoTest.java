@@ -27,6 +27,8 @@ public class OdontologoTest {
 
     private Odontologo odontologo2 = new Odontologo("OdontologoTres", "testTres", "ODO003");
 
+    private Odontologo odontologo3 = new Odontologo("OdontologoTres", "testTres", "ODO003");
+
     private String getConfigProperty(String property, String propFileName) throws IOException, MissingPropertyException {
         configProperties.loadProperties(propFileName);
 
@@ -125,6 +127,28 @@ public class OdontologoTest {
         Assert.assertEquals(odontologoName, odontologo2ToModify.getNombre());
         Assert.assertEquals(odontologoLastName, odontologo2ToModify.getApellido());
         Assert.assertEquals(odontologoMatricula, odontologo2ToModify.getMatricula());
+    }
+
+    @Test(priority = 5)
+    public void addOdontologoWithId3() {
+        OdontologoPage odontologoPage = new OdontologoPage(driver, null);
+
+        odontologoPage.navigateToFormToAddOdontologo();
+        odontologoPage.insertName(odontologo3.getNombre());
+        odontologoPage.insertLastName(odontologo3.getApellido());
+        odontologoPage.insertMatricula(odontologo3.getMatricula());
+        odontologoPage.clickBtnFormAddOdontologo();
+
+        String odontologoId = odontologoPage.getOdontologoAddedIntoTable(2, 1);
+        String odontologoName = odontologoPage.getOdontologoAddedIntoTable(2, 2);
+        String odontologoLastName = odontologoPage.getOdontologoAddedIntoTable(2, 3);
+        String odontologoMatricula = odontologoPage.getOdontologoAddedIntoTable(2, 4);
+
+        Assert.assertEquals(odontologoPage.tableRows().size(), 2);
+        Assert.assertEquals(parseInt(odontologoId), 3);
+        Assert.assertEquals(odontologoName, odontologo3.getNombre());
+        Assert.assertEquals(odontologoLastName, odontologo3.getApellido());
+        Assert.assertEquals(odontologoMatricula, odontologo3.getMatricula());
     }
 
 
