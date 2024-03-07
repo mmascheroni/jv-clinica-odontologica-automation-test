@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [Command line suite]" verbose="0">
+  <test thread-count="5" name="Command line test(failed)" verbose="0">
+    <classes>
+      <class name="api.PacienteTest">
+        <methods>
+          <include name="shouldMessageFechaIngresoPasadaToPostPaciente"/>
+          <include name="shouldMessageDNILarge11ToPostPaciente"/>
+          <include name="shouldNotGetPaciente"/>
+          <include name="deletePacienteWithId1"/>
+          <include name="getPacientesHaveLengthEquals0"/>
+          <include name="getPacientesHaveLengthEquals1AfterDelete"/>
+          <include name="shouldMessageLastNameEmptyToPostPaciente"/>
+          <include name="shouldMessageNameEmptyToPostPaciente"/>
+          <include name="shouldNotPostToPaciente"/>
+          <include name="shouldNotGetPacientes"/>
+          <include name="getPacientesHaveLengthEquals1"/>
+          <include name="getPacientesHaveLengthEquals2"/>
+          <include name="postPacienteWithIdEquals2"/>
+          <include name="getPacienteWithIdEquals2"/>
+          <include name="shouldNotDeletePacientes"/>
+          <include name="postPacienteWithIdEquals1"/>
+          <include name="getPacienteWithIdEquals1"/>
+        </methods>
+      </class> <!-- api.PacienteTest -->
+      <class name="ui.OdontologoTest">
+        <methods>
+          <include name="addOdontologoWithId2"/>
+          <include name="tearDown"/>
+          <include name="modifyingOdontologoWithId2"/>
+          <include name="preconditions"/>
+          <include name="addOdontologoWithId1"/>
+          <include name="deleteFirstOdontologoInTable"/>
+          <include name="addOdontologoWithId3"/>
+        </methods>
+      </class> <!-- ui.OdontologoTest -->
+      <class name="api.OdontologoTest">
+        <methods>
+          <include name="shouldNotGetOdontologo"/>
+          <include name="shouldMessageNameEmptyToPostOdontologo"/>
+          <include name="getOdontologoByIdEquals1"/>
+          <include name="getOdontologosIsEmpty"/>
+          <include name="shouldMessageLastNameEmptyToPostOdontologo"/>
+          <include name="shouldNotGetOdontologos"/>
+          <include name="deleteOdontologoWithId1"/>
+          <include name="getOdontologosHaveLengthEquals2"/>
+          <include name="getOdontologosHaveLengthEquals1"/>
+          <include name="shouldNotDeleteOdontologo"/>
+          <include name="postOdontologoWithId2"/>
+          <include name="postOdontologoWithId1"/>
+          <include name="shouldMessageMatriculaEmptyToPostOdontologo"/>
+          <include name="getOdontologosHaveLengthEquals1AfterDelete"/>
+          <include name="shouldNotPostToOdontologo"/>
+        </methods>
+      </class> <!-- api.OdontologoTest -->
+      <class name="api.TurnoTest">
+        <methods>
+          <include name="postTurnoWithOdontologoAndPacienteNull"/>
+          <include name="getTurnosSizeIsEquals1AfterDelete"/>
+          <include name="postTurnoWithId2"/>
+          <include name="getTurnosSizeIsEquals1"/>
+          <include name="postTurnoWithId1"/>
+          <include name="postTurnoWithPacienteNoExist"/>
+          <include name="postTurnoWithOdontologoAndPacienteNoExists"/>
+          <include name="deleteTurnoWithId1"/>
+          <include name="getTurnoWithId1"/>
+          <include name="getTurnosSizeIsEquals2"/>
+          <include name="postTurnoWithFechaLessThanToday"/>
+          <include name="postTurnoWithOdontologoNoExist"/>
+          <include name="getTurnosIsEmpty"/>
+        </methods>
+      </class> <!-- api.TurnoTest -->
+    </classes>
+  </test> <!-- Command line test(failed) -->
+</suite> <!-- Failed suite [Command line suite] -->
