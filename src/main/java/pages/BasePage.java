@@ -53,6 +53,12 @@ public class BasePage {
         findElement(locator).sendKeys(keys);
     }
 
+    protected void sendNumbers(By locator, int number) {
+        findElement(locator).clear();
+        String keys = String.valueOf(number);
+        findElement(locator).sendKeys(keys);
+    }
+
     protected void sendKey(CharSequence key, By locator) {
         findElement(locator).sendKeys(key);
     }

@@ -12,7 +12,7 @@ public class LocalDateAdapter {
 //    }
 
     public String localDateToString(LocalDate fecha, String pattern) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
 
         String fechaString = fecha.format(formatter);
 
