@@ -38,7 +38,7 @@ public class PacientePage extends BasePage {
 
     private String pacienteTBodyTable = "//*[@id=\"pacientes-tabla\"]/tbody";
 
-    private By firstPacienteIdInTable = By.xpath("/html/body/section[1]/article/table/tbody/tr/td[1]/button");
+    private By firstPacienteIdInTable = By.xpath("/html/body/section[1]/article/table/tbody/tr[1]/td[1]/button");
 
     private By firstPacienteNameInTable = By.xpath("/html/body/section[1]/article/table/tbody/tr/td[2]");
 
@@ -49,6 +49,25 @@ public class PacientePage extends BasePage {
     private By secondPacienteBtnDelete = By.xpath("/html/body/section[1]/article/table/tbody/tr[1]/td[10]/button[2]");
 
     // END LOCATORS - PACIENTE TABLE
+
+    // LOCATOR - MODIFIY PACIENTE FORM
+    private  By modifyInputName = By.xpath("/html/body/section[2]/form/input[2]");
+
+    private  By modifyInputLastName = By.xpath("/html/body/section[2]/form/input[3]");
+
+    private  By modifyInputDNI = By.xpath("/html/body/section[2]/form/input[4]");
+
+    private  By modifyInputIncomeDate = By.xpath("/html/body/section[2]/form/input[5]");
+
+    private  By modifyInputStreet = By.xpath("/html/body/section[2]/form/input[7]");
+
+    private  By modifyInputNumber = By.xpath("/html/body/section[2]/form/input[8]");
+
+    private  By modifyInputLocation = By.xpath("/html/body/section[2]/form/input[9]");
+
+    private  By btnModifyPaciente = By.xpath("/html/body/section[2]/form/button");
+    // END LOCATOR - MODIFIY PACIENTE FORM
+
 
 
     public void navigateToPaciente(String username, String password) throws MissingPropertyException, IOException {
@@ -99,6 +118,10 @@ public class PacientePage extends BasePage {
         return getValueFromTable(pacienteTBodyTable, row, column);
     }
 
+    public String getFirstIdOnTable() {
+        return getText(firstPacienteIdInTable);
+    }
+
     public List<WebElement> tableRows() {
         return tableRows(pacienteTBodyTable);
     }
@@ -113,6 +136,42 @@ public class PacientePage extends BasePage {
 
     public String pacienteTableIsEmpty() {
         return getText(pNoPacientesInTable);
+    }
+
+    public void navigateToFormToModifiyPaciente() {
+        click(firstPacienteBtnModify);
+    }
+
+    public void modifyInsertName(String name) {
+        sendKeys(modifyInputName, name);
+    }
+
+    public void modifyInsertLastName(String lastName) {
+        sendKeys(modifyInputLastName, lastName);
+    }
+
+    public void modifyInsertDNI(String dni) {
+        sendKeys(modifyInputDNI, dni);
+    }
+
+    public void modifyInsertIncomeDate(String incomeDate) {
+        sendKeys(modifyInputIncomeDate, incomeDate);
+    }
+
+    public void modifyInsertStreet(String street) {
+        sendKeys(modifyInputStreet, street);
+    }
+
+    public void modifyInsertNumber(int number) {
+        sendNumbers(modifyInputNumber, number);
+    }
+
+    public void modifyInsertLocation(String location) {
+        sendKeys(modifyInputLocation, location);
+    }
+
+    public void modifiyPaciente() {
+        click(btnModifyPaciente);
     }
 
 }
