@@ -38,7 +38,7 @@ public class PacientePage extends BasePage {
 
     private String pacienteTBodyTable = "//*[@id=\"pacientes-tabla\"]/tbody";
 
-    private By firstPacienteIdInTable = By.xpath("/html/body/section[1]/article/table/tbody/tr[1]/td[1]/button");
+    private By firstPacienteIdInTable = By.xpath("/html/body/section[1]/article/table/tbody/tr/td[1]/button");
 
     private By firstPacienteNameInTable = By.xpath("/html/body/section[1]/article/table/tbody/tr/td[2]");
 
