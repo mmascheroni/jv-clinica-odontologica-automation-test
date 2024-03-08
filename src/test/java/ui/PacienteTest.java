@@ -172,12 +172,23 @@ public class PacienteTest {
     }
 
 
+    @Test(priority = 5)
+    public void deletePacienteWithId2() {
+        PacientePage pacientePage = new PacientePage(driver, null);
 
-//    @AfterClass
-//    public void tearDown() {
-//        PacientePage pacientePage = new PacientePage(driver, null);
-//
-//        pacientePage.close();
-//    }
+        pacientePage.clickBtnDeleteSecondPacienteInTable();
+        pacientePage.acceptAlertToDeletePaciente();
+
+        Assert.assertEquals(pacientePage.tableRows().size(), 1);
+    }
+
+
+
+    @AfterClass
+    public void tearDown() {
+        PacientePage pacientePage = new PacientePage(driver, null);
+
+        pacientePage.close();
+    }
 
 }
