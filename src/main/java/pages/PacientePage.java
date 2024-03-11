@@ -40,10 +40,6 @@ public class PacientePage extends BasePage {
 
     private By firstPacienteIdInTable = By.xpath("/html/body/section[1]/article/table/tbody/tr/td[1]/button");
 
-    private By firstPacienteNameInTable = By.xpath("/html/body/section[1]/article/table/tbody/tr/td[2]");
-
-    private By firstPacienteLastNameInTable = By.xpath("/html/body/section[1]/article/table/tbody/tr/td[3]");
-
     private By firstPacienteBtnModify = By.xpath("/html/body/section[1]/article/table/tbody/tr/td[10]/button[1]");
 
     private By secondPacienteBtnDelete = By.xpath("/html/body/section[1]/article/table/tbody/tr[1]/td[10]/button[2]");
